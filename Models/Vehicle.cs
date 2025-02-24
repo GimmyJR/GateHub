@@ -1,10 +1,14 @@
-﻿namespace GateHub.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace GateHub.Models
 {
     public class Vehicle
     {
         public int Id { get; set; }
         public string PlateNumber { get; set; }
+        [Required, DataType(DataType.Date)]
         public DateTime LicenseStart { get; set; }
+        [Required, DataType(DataType.Date)]
         public DateTime LicenseEnd { get; set; }
         public string ModelDescription { get; set; }
         public string ModelCompany { get; set; }

@@ -177,3 +177,4 @@ D:\Backend Material\Projects\dot net projects\GateHub\obj\Debug\net8.0\refint\Ga
 D:\Backend Material\Projects\dot net projects\GateHub\obj\Debug\net8.0\GateHub.pdb
 D:\Backend Material\Projects\dot net projects\GateHub\obj\Debug\net8.0\GateHub.genruntimeconfig.cache
 D:\Backend Material\Projects\dot net projects\GateHub\obj\Debug\net8.0\ref\GateHub.dll
+D:\Backend Material\Projects\dot net projects\GateHub\obj\Debug\net8.0\GateHub.sourcelink.json
