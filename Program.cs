@@ -27,6 +27,7 @@ namespace GateHub
             .AddEntityFrameworkStores<GateHubContext>()
             .AddDefaultTokenProviders();
             builder.Services.AddScoped<IAdminRepo, AdminRepo>();
+            builder.Services.AddScoped<IVehicleOwnerRepo, VehicleOwnerRepo>();
             builder.Services.AddScoped<IGateStaffRepo, GateStaffRepo>();
             builder.Services.AddScoped<IGenerateTokenService, GenerateTokenService>();
             builder.Services.AddDbContext<GateHubContext>(options =>
