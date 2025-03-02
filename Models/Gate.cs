@@ -7,6 +7,7 @@
         public string AddressName { get; set; }
         public string AddressCity { get; set; }
         public string AddressGovernment { get; set; }
+        public ICollection<GateStaff> GateStaffs { get; set; }
         public ICollection<VehicleEntry> VehicleEntries { get; set; }
 
     }

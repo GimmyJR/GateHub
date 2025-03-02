@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using System.Text.Json.Serialization;
 
 namespace GateHub
 {
@@ -16,12 +17,18 @@ namespace GateHub
 
 
             builder.Services.AddControllers();
+            //builder.Services.AddControllers().AddJsonOptions(options =>
+            //{
+            //    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
+            //});
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
             builder.Services.AddIdentity<AppUser, IdentityRole>()
             .AddEntityFrameworkStores<GateHubContext>()
             .AddDefaultTokenProviders();
             builder.Services.AddScoped<IAdminRepo, AdminRepo>();
+            builder.Services.AddScoped<IGateStaffRepo, GateStaffRepo>();
+            builder.Services.AddScoped<IGenerateTokenService, GenerateTokenService>();
             builder.Services.AddDbContext<GateHubContext>(options =>
             options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
             builder.Services.AddAuthentication(options =>

@@ -3,24 +3,20 @@
   "WorkspaceRootPath": "D:\\Backend Material\\Projects\\dot net projects\\GateHub\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{86A19443-E36E-42EC-AA0B-BC18F137AC58}|GateHub.csproj|d:\\backend material\\projects\\dot net projects\\gatehub\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{86A19443-E36E-42EC-AA0B-BC18F137AC58}|GateHub.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{86A19443-E36E-42EC-AA0B-BC18F137AC58}|GateHub.csproj|d:\\backend material\\projects\\dot net projects\\gatehub\\controllers\\admincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{86A19443-E36E-42EC-AA0B-BC18F137AC58}|GateHub.csproj|solutionrelative:controllers\\admincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{86A19443-E36E-42EC-AA0B-BC18F137AC58}|GateHub.csproj|d:\\backend material\\projects\\dot net projects\\gatehub\\repository\\adminrepo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{86A19443-E36E-42EC-AA0B-BC18F137AC58}|GateHub.csproj|solutionrelative:repository\\adminrepo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{86A19443-E36E-42EC-AA0B-BC18F137AC58}|GateHub.csproj|d:\\backend material\\projects\\dot net projects\\gatehub\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{86A19443-E36E-42EC-AA0B-BC18F137AC58}|GateHub.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{86A19443-E36E-42EC-AA0B-BC18F137AC58}|GateHub.csproj|d:\\backend material\\projects\\dot net projects\\gatehub\\dtos\\multirolelogindto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{86A19443-E36E-42EC-AA0B-BC18F137AC58}|GateHub.csproj|solutionrelative:dtos\\multirolelogindto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{86A19443-E36E-42EC-AA0B-BC18F137AC58}|GateHub.csproj|d:\\backend material\\projects\\dot net projects\\gatehub\\models\\gatestaff.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{86A19443-E36E-42EC-AA0B-BC18F137AC58}|GateHub.csproj|solutionrelative:models\\gatestaff.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{86A19443-E36E-42EC-AA0B-BC18F137AC58}|GateHub.csproj|d:\\backend material\\projects\\dot net projects\\gatehub\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
-      "RelativeMoniker": "D:0:0:{86A19443-E36E-42EC-AA0B-BC18F137AC58}|GateHub.csproj|solutionrelative:appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+      "AbsoluteMoniker": "D:0:0:{86A19443-E36E-42EC-AA0B-BC18F137AC58}|GateHub.csproj|d:\\backend material\\projects\\dot net projects\\gatehub\\dtos\\gatecreatedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{86A19443-E36E-42EC-AA0B-BC18F137AC58}|GateHub.csproj|solutionrelative:dtos\\gatecreatedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -30,7 +26,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 8,
+          "SelectedChildIndex": 7,
           "Children": [
             {
               "$type": "Bookmark",
@@ -50,67 +46,54 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "appsettings.json",
-              "DocumentMoniker": "D:\\Backend Material\\Projects\\dot net projects\\GateHub\\appsettings.json",
-              "RelativeDocumentMoniker": "appsettings.json",
-              "ToolTip": "D:\\Backend Material\\Projects\\dot net projects\\GateHub\\appsettings.json",
-              "RelativeToolTip": "appsettings.json",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA4AAAAEAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2025-03-01T13:24:27.699Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "MultiRoleLoginDto.cs",
-              "DocumentMoniker": "D:\\Backend Material\\Projects\\dot net projects\\GateHub\\Dtos\\MultiRoleLoginDto.cs",
-              "RelativeDocumentMoniker": "Dtos\\MultiRoleLoginDto.cs",
-              "ToolTip": "D:\\Backend Material\\Projects\\dot net projects\\GateHub\\Dtos\\MultiRoleLoginDto.cs",
-              "RelativeToolTip": "Dtos\\MultiRoleLoginDto.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAsAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-01T12:32:29.862Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
               "DocumentIndex": 2,
-              "Title": "AdminRepo.cs",
-              "DocumentMoniker": "D:\\Backend Material\\Projects\\dot net projects\\GateHub\\repository\\AdminRepo.cs",
-              "RelativeDocumentMoniker": "repository\\AdminRepo.cs",
-              "ToolTip": "D:\\Backend Material\\Projects\\dot net projects\\GateHub\\repository\\AdminRepo.cs",
-              "RelativeToolTip": "repository\\AdminRepo.cs",
-              "ViewState": "AQIAACIAAAAAAAAAAAAgwCYAAABfAAAA",
+              "Title": "GateStaff.cs",
+              "DocumentMoniker": "D:\\Backend Material\\Projects\\dot net projects\\GateHub\\Models\\GateStaff.cs",
+              "RelativeDocumentMoniker": "Models\\GateStaff.cs",
+              "ToolTip": "D:\\Backend Material\\Projects\\dot net projects\\GateHub\\Models\\GateStaff.cs",
+              "RelativeToolTip": "Models\\GateStaff.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAsAAAAIAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-28T11:42:49.499Z",
+              "WhenOpened": "2025-03-02T12:27:06.56Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "AdminController.cs",
-              "DocumentMoniker": "D:\\Backend Material\\Projects\\dot net projects\\GateHub\\Controllers\\AdminController.cs",
-              "RelativeDocumentMoniker": "Controllers\\AdminController.cs",
-              "ToolTip": "D:\\Backend Material\\Projects\\dot net projects\\GateHub\\Controllers\\AdminController.cs",
-              "RelativeToolTip": "Controllers\\AdminController.cs",
-              "ViewState": "AQIAAE8AAAAAAAAAAAAAwAkAAAAdAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-28T11:41:54.703Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
               "Title": "Program.cs",
               "DocumentMoniker": "D:\\Backend Material\\Projects\\dot net projects\\GateHub\\Program.cs",
               "RelativeDocumentMoniker": "Program.cs",
               "ToolTip": "D:\\Backend Material\\Projects\\dot net projects\\GateHub\\Program.cs",
               "RelativeToolTip": "Program.cs",
-              "ViewState": "AQIAAB8AAAAAAAAAAAAQwCQAAAAqAAAA",
+              "ViewState": "AQIAAAoAAAAAAAAAAAAqwBEAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-28T07:45:18.089Z",
+              "WhenOpened": "2025-03-02T12:22:19.083Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "GateCreateDto.cs",
+              "DocumentMoniker": "D:\\Backend Material\\Projects\\dot net projects\\GateHub\\Dtos\\GateCreateDto.cs",
+              "RelativeDocumentMoniker": "Dtos\\GateCreateDto.cs",
+              "ToolTip": "D:\\Backend Material\\Projects\\dot net projects\\GateHub\\Dtos\\GateCreateDto.cs",
+              "RelativeToolTip": "Dtos\\GateCreateDto.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABAAAAAnAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-02T12:00:38.287Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "AdminController.cs",
+              "DocumentMoniker": "D:\\Backend Material\\Projects\\dot net projects\\GateHub\\Controllers\\AdminController.cs",
+              "RelativeDocumentMoniker": "Controllers\\AdminController.cs",
+              "ToolTip": "D:\\Backend Material\\Projects\\dot net projects\\GateHub\\Controllers\\AdminController.cs",
+              "RelativeToolTip": "Controllers\\AdminController.cs",
+              "ViewState": "AQIAAHMAAAAAAAAAAAAAAIYAAAA2AAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-02T11:56:55.175Z",
               "EditorCaption": ""
             }
           ]

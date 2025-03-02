@@ -1,7 +1,6 @@
 ﻿using GateHub.Dtos;
 using GateHub.Models;
 using GateHub.repository;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -9,30 +8,29 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GateHub.Controllers
 {
-    //[Authorize(Roles = "Admin")]
     [Route("api/[controller]")]
     [ApiController]
-    public class AdminController : ControllerBase
+    public class GateStaffController : ControllerBase
     {
-        private readonly UserManager<AppUser> userManager;
         private readonly SignInManager<AppUser> signInManager;
+        private readonly UserManager<AppUser> userManager;
         private readonly IConfiguration configuration;
-        private readonly IAdminRepo adminRepo;
+        private readonly IGateStaffRepo gateStaffRepo;
         private readonly IGenerateTokenService generateTokenService;
         private readonly GateHubContext context;
 
-        public AdminController(UserManager<AppUser> userManager,SignInManager<AppUser> signInManager,IConfiguration configuration,IAdminRepo adminRepo,IGenerateTokenService generateTokenService,GateHubContext context)
+        public GateStaffController(SignInManager<AppUser> signInManager,UserManager<AppUser> userManager,IConfiguration configuration,IGateStaffRepo gateStaffRepo,IGenerateTokenService generateTokenService,GateHubContext context)
         {
-            this.userManager = userManager;
             this.signInManager = signInManager;
+            this.userManager = userManager;
             this.configuration = configuration;
-            this.adminRepo = adminRepo;
+            this.gateStaffRepo = gateStaffRepo;
             this.generateTokenService = generateTokenService;
             this.context = context;
         }
 
-        [HttpPost("register-admin")]
-        public async Task<IActionResult> RegisterAdmin([FromBody] AdminRegistrationDto dto)
+        [HttpPost("register-gatestaff")]
+        public async Task<IActionResult> RegisterGateStaff([FromBody] GateStaffRegistrationDto dto)
         {
             if (!ModelState.IsValid)
             {
@@ -47,18 +45,31 @@ namespace GateHub.Controllers
                 BirthDate = dto.BirthDate,
                 Gender = dto.Gender,
             };
-            var result = await userManager.CreateAsync(user,dto.Password);
+            var result = await userManager.CreateAsync(user, dto.Password);
             if (!result.Succeeded)
             {
                 return BadRequest(result.Errors);
             }
-            var roleResult = await userManager.AddToRoleAsync(user, "Admin");
+            var roleResult = await userManager.AddToRoleAsync(user, "GateStaff");
             if (!roleResult.Succeeded)
             {
                 return BadRequest(roleResult.Errors);
             }
 
-            return Ok(user);
+            var gateStaff = new GateStaff
+            {
+                PhoneNumber = dto.PhoneNumber,
+                GateId = dto.GateId,
+                AppUserId = user.Id,
+                appUser = user
+            };
+
+            context.GateStaff.Add(gateStaff);
+            await context.SaveChangesAsync();
+
+
+
+            return Ok(gateStaff);
         }
 
         [HttpPost("login")]
@@ -69,15 +80,15 @@ namespace GateHub.Controllers
                 return BadRequest(ModelState);
             }
             var user = await userManager.FindByNameAsync(dto.NatId);
-            
-            if(user == null)
+
+            if (user == null)
             {
                 return Unauthorized("Invalid Credentials");
-            }    
+            }
 
-            var passcheck = await signInManager.CheckPasswordSignInAsync(user,dto.Password,lockoutOnFailure:false);
-            
-            if (!passcheck.Succeeded) 
+            var passcheck = await signInManager.CheckPasswordSignInAsync(user, dto.Password, lockoutOnFailure: false);
+
+            if (!passcheck.Succeeded)
             {
                 return Unauthorized("Invalid Credentials");
             }
@@ -90,7 +101,7 @@ namespace GateHub.Controllers
 
             var tokenString = generateTokenService.GenerateJwtTokenAsync(user);
 
-            return Ok(new { user ,tokenString});
+            return Ok(new { user, tokenString });
 
         }
 
@@ -101,44 +112,5 @@ namespace GateHub.Controllers
             await signInManager.SignOutAsync();
             return Ok("logout successful");
         }
-
-        [HttpPost("add-gate")]
-        public async Task<IActionResult> AddGate([FromBody]GateCreateDto dto)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var gate = new Gate
-            {
-                Type = dto.Type,
-                AddressName = dto.AddressName,
-                AddressCity = dto.AddressCity,
-                AddressGovernment = dto.AddressGovernment,
-                GateStaffs = new List<GateStaff>(),
-                VehicleEntries = new List<VehicleEntry>()
-            };
-
-            context.Gates.Add(gate);
-            await context.SaveChangesAsync();
-            
-            return Ok(gate);
-        }
-
-        [HttpGet("get-gate{id}")]
-        public async Task<IActionResult> GetGateById(int id)
-        {
-            var gate = await context.Gates
-                .Include(G => G.GateStaffs)
-                .Include(G => G.VehicleEntries)
-                .FirstOrDefaultAsync(G => G.Id == id);
-            if (gate == null)
-                return NotFound();
-            return Ok(gate);
-        }
-
-
-
     }
 }
