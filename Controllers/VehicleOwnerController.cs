@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 namespace GateHub.Controllers
 {
@@ -112,6 +114,38 @@ namespace GateHub.Controllers
         {
             await signInManager.SignOutAsync();
             return Ok("logout successful");
+        }
+
+
+        [HttpGet("VOProfile")]
+        public async Task<IActionResult> GetVehicleOwnerProfile()
+        {
+            var token = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+
+            var handler = new JwtSecurityTokenHandler();
+            var jwtToken = handler.ReadToken(token) as JwtSecurityToken;
+
+            if (jwtToken == null)
+                return Unauthorized();
+
+            var userId = jwtToken.Claims.First(claim => claim.Type == ClaimTypes.NameIdentifier).Value;
+
+            //var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Unauthorized("User ID not found in token.");
+            }
+            var owner = await context.VehicleOwners
+                .Include(vo => vo.Vehicles)
+                .Include(vo => vo.Transactions)
+                .FirstOrDefaultAsync(vo => vo.AppUserId == userId);
+
+            if (owner == null)
+            {
+                return NotFound("Vehicle owner profile not found.");
+            }
+
+            return Ok(owner);
         }
     }
 }

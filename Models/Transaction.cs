@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace GateHub.Models
 {
@@ -12,6 +13,7 @@ namespace GateHub.Models
         public string Status { get; set; }
 
         public int VehicleOwnerId { get; set; }
+        [JsonIgnore]
         public VehicleOwner VehicleOwner { get; set; }
     }
 

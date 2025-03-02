@@ -21,7 +21,7 @@ namespace GateHub.Controllers
         private readonly IGenerateTokenService generateTokenService;
         private readonly GateHubContext context;
 
-        public AdminController(UserManager<AppUser> userManager,SignInManager<AppUser> signInManager,IConfiguration configuration,IAdminRepo adminRepo,IGenerateTokenService generateTokenService,GateHubContext context)
+        public AdminController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, IConfiguration configuration, IAdminRepo adminRepo, IGenerateTokenService generateTokenService, GateHubContext context)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
@@ -47,7 +47,7 @@ namespace GateHub.Controllers
                 BirthDate = dto.BirthDate,
                 Gender = dto.Gender,
             };
-            var result = await userManager.CreateAsync(user,dto.Password);
+            var result = await userManager.CreateAsync(user, dto.Password);
             if (!result.Succeeded)
             {
                 return BadRequest(result.Errors);
@@ -69,15 +69,15 @@ namespace GateHub.Controllers
                 return BadRequest(ModelState);
             }
             var user = await userManager.FindByNameAsync(dto.NatId);
-            
-            if(user == null)
+
+            if (user == null)
             {
                 return Unauthorized("Invalid Credentials");
-            }    
+            }
 
-            var passcheck = await signInManager.CheckPasswordSignInAsync(user,dto.Password,lockoutOnFailure:false);
-            
-            if (!passcheck.Succeeded) 
+            var passcheck = await signInManager.CheckPasswordSignInAsync(user, dto.Password, lockoutOnFailure: false);
+
+            if (!passcheck.Succeeded)
             {
                 return Unauthorized("Invalid Credentials");
             }
@@ -90,7 +90,7 @@ namespace GateHub.Controllers
 
             var tokenString = generateTokenService.GenerateJwtTokenAsync(user);
 
-            return Ok(new { user ,tokenString});
+            return Ok(new { user, tokenString });
 
         }
 
@@ -103,7 +103,7 @@ namespace GateHub.Controllers
         }
 
         [HttpPost("add-gate")]
-        public async Task<IActionResult> AddGate([FromBody]GateCreateDto dto)
+        public async Task<IActionResult> AddGate([FromBody] GateCreateDto dto)
         {
             if (!ModelState.IsValid)
             {
@@ -122,11 +122,11 @@ namespace GateHub.Controllers
 
             context.Gates.Add(gate);
             await context.SaveChangesAsync();
-            
+
             return Ok(gate);
         }
 
-        [HttpGet("get-gate{id}")]
+        [HttpGet("GetGateById/{id}")]
         public async Task<IActionResult> GetGateById(int id)
         {
             var gate = await context.Gates
@@ -139,6 +139,42 @@ namespace GateHub.Controllers
         }
 
 
+        [HttpPost("Add-vehicle")]
+        public async Task<IActionResult> AddVehicle(VehicleCreateDto dto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
+            var vehicle = new Vehicle
+            {
+                PlateNumber = dto.PlateNumber,
+                LicenseStart = dto.LicenseStart,
+                LicenseEnd = dto.LicenseEnd,
+                ModelDescription = dto.ModelDescription,
+                ModelCompany = dto.ModelCompany,
+                Color = dto.Color,
+                Type = dto.Type,
+                RFID = dto.RFID,
+                VehicleOwnerId = dto.VehicleOwnerId,
+            };
+
+
+            context.Vehicles.Add(vehicle);
+            await context.SaveChangesAsync();
+
+            return Ok(vehicle);
+        }
+        [HttpGet("GetVehicleById/{id}")]
+        public async Task<IActionResult> GetVehicleById(int id)
+        {
+            var vehicle = await context.Vehicles.Include(v => v.VehicleEntries)
+                .FirstOrDefaultAsync(v => v.Id == id);
+            if (vehicle == null)
+                return NotFound();
+            return Ok(vehicle);
+        }
 
     }
 }

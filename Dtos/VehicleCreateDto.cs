@@ -1,28 +1,29 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.Text.Json.Serialization;
 
-namespace GateHub.Models
+namespace GateHub.Dtos
 {
-    public class Vehicle
+    public class VehicleCreateDto
     {
-        public int Id { get; set; }
+        [Required]
         public string PlateNumber { get; set; }
+
         [Required, DataType(DataType.Date)]
         public DateTime LicenseStart { get; set; }
+
         [Required, DataType(DataType.Date)]
         public DateTime LicenseEnd { get; set; }
+
         public string ModelDescription { get; set; }
+
         public string ModelCompany { get; set; }
+
         public string Color { get; set; }
+
         public string Type { get; set; }
+
         public string RFID { get; set; }
-        public ICollection<VehicleEntry> VehicleEntries { get; set; }
+
+        [Required]
         public int VehicleOwnerId { get; set; }
-        [JsonIgnore]
-        public VehicleOwner VehicleOwner { get; set; }
     }
-
-
-
-
 }

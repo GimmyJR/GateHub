@@ -23,6 +23,7 @@ namespace GateHub.repository
             {
                 new Claim(ClaimTypes.Name,user.Name),
                 new Claim(ClaimTypes.DateOfBirth,user.BirthDate.ToString()),
+                new Claim(ClaimTypes.NameIdentifier, user.Id), 
                 new Claim(ClaimTypes.MobilePhone,user.PhoneNumber),
                 new Claim(ClaimTypes.SerialNumber,user.NatId),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
