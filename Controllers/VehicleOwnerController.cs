@@ -67,8 +67,7 @@ namespace GateHub.Controllers
                 appUser = user
             };
 
-            context.VehicleOwners.Add(vehicleOwner);
-            await context.SaveChangesAsync();
+            await vehicleOwnerRepo.AddVehicleOwner(vehicleOwner);
 
             return Ok(vehicleOwner);
         }
@@ -130,15 +129,11 @@ namespace GateHub.Controllers
 
             var userId = jwtToken.Claims.First(claim => claim.Type == ClaimTypes.NameIdentifier).Value;
 
-            //var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             if (string.IsNullOrEmpty(userId))
             {
                 return Unauthorized("User ID not found in token.");
             }
-            var owner = await context.VehicleOwners
-                .Include(vo => vo.Vehicles)
-                .Include(vo => vo.Transactions)
-                .FirstOrDefaultAsync(vo => vo.AppUserId == userId);
+            var owner = await vehicleOwnerRepo.VOProfile(userId);
 
             if (owner == null)
             {

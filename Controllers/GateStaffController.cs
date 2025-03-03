@@ -64,10 +64,7 @@ namespace GateHub.Controllers
                 appUser = user
             };
 
-            context.GateStaff.Add(gateStaff);
-            await context.SaveChangesAsync();
-
-
+            await gateStaffRepo.AddGateStaff(gateStaff);
 
             return Ok(gateStaff);
         }

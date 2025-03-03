@@ -4,6 +4,7 @@ using GateHub.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GateHub.Migrations
 {
     [DbContext(typeof(GateHubContext))]
-    partial class GateHubContextModelSnapshot : ModelSnapshot
+    [Migration("20250303115940_add-PlateNum-to-lostVehicle")]
+    partial class addPlateNumtolostVehicle
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

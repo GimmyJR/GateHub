@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("GateHub")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+30e61b8bc8983ea95979a0d155bb3114eacbb6a7")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1d84b8b18ccc285f9bf7c9e2e4d80a51ea8bf42d")]
 [assembly: System.Reflection.AssemblyProductAttribute("GateHub")]
 [assembly: System.Reflection.AssemblyTitleAttribute("GateHub")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

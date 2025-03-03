@@ -9,6 +9,17 @@ namespace GateHub.repository
 {
     public class GateStaffRepo:IGateStaffRepo
     {
-       
+        private readonly GateHubContext context;
+
+        public GateStaffRepo(GateHubContext context)
+        {
+            this.context = context;
+        }
+
+        public async Task AddGateStaff(GateStaff gateStaff)
+        {
+            context.GateStaff.Add(gateStaff);
+            await context.SaveChangesAsync();
+        }
     }
 }

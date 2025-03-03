@@ -110,31 +110,19 @@ namespace GateHub.Controllers
                 return BadRequest(ModelState);
             }
 
-            var gate = new Gate
-            {
-                Type = dto.Type,
-                AddressName = dto.AddressName,
-                AddressCity = dto.AddressCity,
-                AddressGovernment = dto.AddressGovernment,
-                GateStaffs = new List<GateStaff>(),
-                VehicleEntries = new List<VehicleEntry>()
-            };
+            await adminRepo.AddGate(dto);
 
-            context.Gates.Add(gate);
-            await context.SaveChangesAsync();
-
-            return Ok(gate);
+            return Ok(dto);
         }
 
         [HttpGet("GetGateById/{id}")]
         public async Task<IActionResult> GetGateById(int id)
         {
-            var gate = await context.Gates
-                .Include(G => G.GateStaffs)
-                .Include(G => G.VehicleEntries)
-                .FirstOrDefaultAsync(G => G.Id == id);
+            var gate = await adminRepo.GetGateById(id);
+
             if (gate == null)
                 return NotFound();
+
             return Ok(gate);
         }
 
@@ -147,33 +135,42 @@ namespace GateHub.Controllers
                 return BadRequest();
             }
 
-            var vehicle = new Vehicle
-            {
-                PlateNumber = dto.PlateNumber,
-                LicenseStart = dto.LicenseStart,
-                LicenseEnd = dto.LicenseEnd,
-                ModelDescription = dto.ModelDescription,
-                ModelCompany = dto.ModelCompany,
-                Color = dto.Color,
-                Type = dto.Type,
-                RFID = dto.RFID,
-                VehicleOwnerId = dto.VehicleOwnerId,
-            };
+            await adminRepo.AddVehicle(dto);
 
-
-            context.Vehicles.Add(vehicle);
-            await context.SaveChangesAsync();
-
-            return Ok(vehicle);
+            return Ok(dto);
         }
         [HttpGet("GetVehicleById/{id}")]
         public async Task<IActionResult> GetVehicleById(int id)
         {
-            var vehicle = await context.Vehicles.Include(v => v.VehicleEntries)
-                .FirstOrDefaultAsync(v => v.Id == id);
+            var vehicle = await adminRepo.GetVehicleById(id);
             if (vehicle == null)
                 return NotFound();
             return Ok(vehicle);
+        }
+
+        [HttpPost("AddLostVehicle")]
+        public async Task<IActionResult> AddLostVehicle([FromBody] LostVehicleCreationDto dto)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            // Find the vehicle by plate number 
+            var vehicle = await adminRepo.FindVehicleByPlateNumber(dto.PlateNumber);
+
+            if (vehicle == null)
+                return NotFound("Vehicle with the provided plate number was not found.");
+
+            await adminRepo.AddLostVehicle(dto);
+
+            return Ok(dto);
+        }
+
+        [HttpGet("getallLostVehicles")]
+        public async Task<IActionResult> GetAllLostVehicles()
+        {
+            var lostVehicles = await adminRepo.GetAllLostVehicles();
+
+            return Ok(lostVehicles);
         }
 
     }
