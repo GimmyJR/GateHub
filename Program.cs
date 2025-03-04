@@ -1,4 +1,5 @@
 
+using GateHub.Hubs;
 using GateHub.Models;
 using GateHub.repository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -26,6 +27,21 @@ namespace GateHub
             builder.Services.AddIdentity<AppUser, IdentityRole>()
             .AddEntityFrameworkStores<GateHubContext>()
             .AddDefaultTokenProviders();
+            builder.Services.AddSignalR();
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAll",
+                    policy =>
+                    {   
+                        policy.WithOrigins("http://127.0.0.1:5500")
+                               .AllowAnyHeader()
+                               .AllowAnyMethod()
+                               .AllowCredentials();
+                        //policy.AllowAnyOrigin()
+                        //.AllowAnyHeader()
+                        //.AllowAnyMethod();
+                    });
+            });
             builder.Services.AddScoped<IAdminRepo, AdminRepo>();
             builder.Services.AddScoped<IVehicleOwnerRepo, VehicleOwnerRepo>();
             builder.Services.AddScoped<IGateStaffRepo, GateStaffRepo>();
@@ -60,11 +76,14 @@ namespace GateHub
                 app.UseSwagger();
                 app.UseSwaggerUI();
             //}
-
             app.UseHttpsRedirection();
+            app.UseRouting();
+            app.UseCors("AllowAll");
             app.UseAuthentication();
+            app.UseWebSockets();
             app.UseAuthorization();
-
+            
+            app.MapHub<NotificationHub>("/notificationHub");
 
             app.MapControllers();
 

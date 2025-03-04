@@ -4,6 +4,7 @@ using GateHub.repository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 
 namespace GateHub.Controllers
@@ -108,6 +109,41 @@ namespace GateHub.Controllers
         {
             await signInManager.SignOutAsync();
             return Ok("logout successful");
+        }
+
+        [HttpPost("AddFine")]
+        public async Task<IActionResult> AddFine([FromBody] FineCreationDto dto)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var vehicle = await gateStaffRepo.FindVehicleByPlateNumber(dto.PlateNumber);
+            
+            if (vehicle == null)
+                return NotFound("Vehicle not found.");
+
+
+            var gateFee = await gateStaffRepo.RetrieveTheFeeOfTheVehilceAndGate(dto.GateId, vehicle.Type);
+
+            if (gateFee == null)
+                return BadRequest("No fee record found for this vehicle type at the specified gate.");
+
+            // Create a new VehicleEntry record for the fine.
+            var fineEntry = new VehicleEntry
+            {
+                FeeValue = gateFee.Fee, 
+                FineValue = dto.FineValue,
+                FineType = dto.FineType,
+                Date = DateTime.Now,
+                IsPaid = false,
+                VehicleId = vehicle.Id,
+                GateId = dto.GateId
+            };
+            await gateStaffRepo.AddFine(fineEntry);
+
+            await gateStaffRepo.SendNotification(dto, vehicle);
+
+            return Ok(new { message = $"Fine {fineEntry} added and notification sent successfully." });
         }
     }
 }
