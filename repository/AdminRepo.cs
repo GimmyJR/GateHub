@@ -40,6 +40,7 @@ namespace GateHub.repository
             var gate = await context.Gates
                 .Include(G => G.GateStaffs)
                 .Include(G => G.VehicleEntries)
+                .Include(G => G.gateFees)
                 .FirstOrDefaultAsync(G => G.Id == id);
 
             return gate;

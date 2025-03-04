@@ -27,6 +27,10 @@ namespace GateHub.Models
                 .HasOne(g => g.gate )
                 .WithMany(ve => ve.VehicleEntries)
                 .HasForeignKey(ve => ve.GateId);
+
+            // Configure composite key for GateFee
+            modelBuilder.Entity<GateFee>()
+                .HasKey(gf => new { gf.GateId, gf.VehicleType });
         }
         public virtual DbSet<VehicleEntry> VehicleEntries { get; set; }
         public virtual DbSet<Gate> Gates { get; set; }
@@ -37,5 +41,7 @@ namespace GateHub.Models
         public virtual DbSet<Notification> Notifications { get; set; }
         public virtual DbSet<LostVehicle> LostVehicles { get; set; }
         public virtual DbSet<GateStaff> GateStaff { get; set; }
+        public virtual DbSet<GateFee> GateFees { get; set; }
+
     }
 }

@@ -173,5 +173,36 @@ namespace GateHub.Controllers
             return Ok(lostVehicles);
         }
 
+        [HttpPost("AddFee")]
+        public async Task<IActionResult> AddGateFee([FromBody] GateFeeDto dto)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            // Verify that the gate exists
+            var gate = await context.Gates.FindAsync(dto.GateId);
+            if (gate == null)
+                return NotFound("Gate not found.");
+
+            // Check if a fee for this gate and vehicle type already exists
+            var existingFee = await context.GateFees
+                .FirstOrDefaultAsync(gf => gf.GateId == dto.GateId && gf.VehicleType.ToLower() == dto.VehicleType.ToLower());
+            if (existingFee != null)
+                return BadRequest("A fee for this vehicle type at the specified gate already exists.");
+
+            // Create the new GateFee record
+            var gateFee = new GateFee
+            {
+                GateId = dto.GateId,
+                VehicleType = dto.VehicleType,
+                Fee = dto.Fee
+            };
+
+            context.GateFees.Add(gateFee);
+            await context.SaveChangesAsync();
+
+            return Ok(gateFee);
+        }
+
     }
 }
