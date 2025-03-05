@@ -1,5 +1,7 @@
 ﻿using GateHub.Models;
 using Microsoft.EntityFrameworkCore;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 namespace GateHub.repository
 {
@@ -26,6 +28,46 @@ namespace GateHub.repository
                 .FirstOrDefaultAsync(vo => vo.AppUserId == userId);
 
             return owner;
+        }
+
+        public async Task<VehicleOwner> GetVehicleOwner(string userId)
+        {
+            var owner = await context.VehicleOwners
+                .Include(vo => vo.Vehicles)
+                .FirstOrDefaultAsync(vo => vo.AppUserId == userId);
+
+            return owner;
+        }
+
+        public async Task<List<VehicleEntry>> GetVehicleOwnerEntries(VehicleOwner owner)
+        {
+            if (owner == null || owner.Vehicles == null || !owner.Vehicles.Any())
+                return new List<VehicleEntry>(); 
+
+            var vehicleIds = owner.Vehicles.Select(v => v.Id).ToList();
+
+            var vehicleEntries = await context.VehicleEntries
+                .Include(ve => ve.vehicle)
+                .Include(ve => ve.gate)
+                .Where(ve => vehicleIds.Contains(ve.VehicleId)) 
+                .ToListAsync();
+
+            return vehicleEntries;
+        }
+
+        public async Task<VehicleEntry> CheckVehicleEntry(int VehicleEntryId,VehicleOwner owner)
+        {
+            var vehicleEntry = await context.VehicleEntries
+                .Include(ve => ve.vehicle)
+                .FirstOrDefaultAsync(ve => ve.Id == VehicleEntryId && ve.vehicle.VehicleOwnerId == owner.Id);
+
+            return vehicleEntry;
+        }
+
+        public async Task AddObjection(Objection objection)
+        {
+            context.Objections.Add(objection);
+            await context.SaveChangesAsync();
         }
     }
 }

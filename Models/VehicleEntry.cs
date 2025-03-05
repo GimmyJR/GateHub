@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace GateHub.Models
 {
@@ -12,8 +13,10 @@ namespace GateHub.Models
         public DateTime Date { get; set; }
         public bool IsPaid { get; set; }
         public int VehicleId { get; set; }
+        [JsonIgnore]
         public Vehicle vehicle { get; set; }
         public int GateId { get; set; }
+        [JsonIgnore]
         public Gate gate{ get; set; }
     }
 
