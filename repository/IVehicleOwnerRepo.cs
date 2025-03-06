@@ -10,5 +10,7 @@ namespace GateHub.repository
         public Task<List<VehicleEntry>> GetVehicleOwnerEntries(VehicleOwner owner);
         public Task<VehicleEntry> CheckVehicleEntry(int VehicleEntryId, VehicleOwner owner);
         public Task AddObjection(Objection objection);
+        public Task<VehicleEntry> FindVehicleEntry(int vehicleEntryId);
+        public Task AddTransaction(Transaction transaction);
     }
 }

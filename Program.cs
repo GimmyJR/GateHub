@@ -48,6 +48,7 @@ namespace GateHub
             builder.Services.AddScoped<IGenerateTokenService, GenerateTokenService>();
             builder.Services.AddDbContext<GateHubContext>(options =>
             options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+            builder.Services.AddHttpClient<PaymobService>();
             builder.Services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;

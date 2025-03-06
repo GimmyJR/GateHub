@@ -50,6 +50,7 @@ namespace GateHub.repository
                 .Include(ve => ve.vehicle)
                 .Include(ve => ve.gate)
                 .Where(ve => vehicleIds.Contains(ve.VehicleId)) 
+                .Where(ve => ve.IsPaid == false)
                 .ToListAsync();
 
             return vehicleEntries;
@@ -67,6 +68,19 @@ namespace GateHub.repository
         public async Task AddObjection(Objection objection)
         {
             context.Objections.Add(objection);
+            await context.SaveChangesAsync();
+        }
+
+        public async Task<VehicleEntry> FindVehicleEntry(int vehicleEntryId)
+        {
+            var vehicleEntry = await context.VehicleEntries.FindAsync(vehicleEntryId);
+
+            return vehicleEntry;
+        }
+
+        public async Task AddTransaction(Transaction transaction)
+        {
+            context.Transactions.Add(transaction);
             await context.SaveChangesAsync();
         }
     }

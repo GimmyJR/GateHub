@@ -1,12 +1,15 @@
 ﻿using GateHub.Dtos;
+using GateHub.Hubs;
 using GateHub.Models;
 using GateHub.repository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Text.Json;
 
 namespace GateHub.Controllers
 {
@@ -19,14 +22,18 @@ namespace GateHub.Controllers
         private readonly GateHubContext context;
         private readonly IGenerateTokenService generateTokenService;
         private readonly IVehicleOwnerRepo vehicleOwnerRepo;
+        private readonly PaymobService paymobService;
+        private readonly IHubContext<NotificationHub> hubContext;
 
-        public VehicleOwnerController(SignInManager<AppUser> signInManager,UserManager<AppUser> userManager,GateHubContext context,IGenerateTokenService generateTokenService,IVehicleOwnerRepo vehicleOwnerRepo)
+        public VehicleOwnerController(SignInManager<AppUser> signInManager,UserManager<AppUser> userManager,GateHubContext context,IGenerateTokenService generateTokenService,IVehicleOwnerRepo vehicleOwnerRepo,PaymobService paymobService,IHubContext<NotificationHub> hubContext)
         {
             this.signInManager = signInManager;
             this.userManager = userManager;
             this.context = context;
             this.generateTokenService = generateTokenService;
             this.vehicleOwnerRepo = vehicleOwnerRepo;
+            this.paymobService = paymobService;
+            this.hubContext = hubContext;
         }
 
 
@@ -221,6 +228,149 @@ namespace GateHub.Controllers
 
             return Ok(new { message = "Objection submitted successfully.", objection });
         }
+
+        [HttpPost("pay-vehicle-entry/{vehicleEntryId}")]
+        public async Task<IActionResult> PayVehicleEntry(int vehicleEntryId)
+        {
+            var token = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+
+            var handler = new JwtSecurityTokenHandler();
+            var jwtToken = handler.ReadToken(token) as JwtSecurityToken;
+
+            if (jwtToken == null)
+                return Unauthorized();
+
+            var userId = jwtToken.Claims.First(claim => claim.Type == ClaimTypes.NameIdentifier).Value;
+
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Unauthorized("User ID not found in token.");
+            }
+
+
+            var owner = await vehicleOwnerRepo.GetVehicleOwner(userId);
+
+            if (owner == null)
+                return NotFound("Vehicle owner not found.");
+
+            var vehicleEntry = await vehicleOwnerRepo.CheckVehicleEntry(vehicleEntryId,owner);
+
+            if (vehicleEntry == null)
+                return NotFound("Vehicle entry not found or does not belong to the owner.");
+
+            if (vehicleEntry.IsPaid)
+                return BadRequest("This entry has already been paid.");
+
+            string paymentUrl = await paymobService.InitiatePayment(owner, vehicleEntry.FeeValue +(vehicleEntry.FineValue ?? 0) , vehicleEntry.Id, "Vehicle Entry Payment");
+            
+            return Ok(new { message = "Redirect to this URL for payment", paymentUrl });
+
+        }
+
+        [HttpPost("recharge-balance")]
+        public async Task<IActionResult> RechargeBalance([FromBody] BalanceRechargeDto dto)
+        {
+            var token = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+
+            var handler = new JwtSecurityTokenHandler();
+            var jwtToken = handler.ReadToken(token) as JwtSecurityToken;
+
+            if (jwtToken == null)
+                return Unauthorized();
+
+            var userId = jwtToken.Claims.First(claim => claim.Type == ClaimTypes.NameIdentifier).Value;
+
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Unauthorized("User ID not found in token.");
+            }
+
+
+            var owner = await vehicleOwnerRepo.GetVehicleOwner(userId);
+
+            if (owner == null)
+                return NotFound("Vehicle owner not found.");
+
+            string paymentUrl = await paymobService.InitiatePayment(owner, dto.Amount, 0, "Balance Recharge");
+            return Ok(new { message = "Redirect to this URL for payment", paymentUrl });
+        }
+
+        [HttpPost("webhook")]
+        public async Task<IActionResult> PaymentWebhook([FromBody] PaymobWebhookDto data)
+        {
+            try
+            {
+                Console.WriteLine("Webhook Received: " + JsonSerializer.Serialize(data));
+
+                if (data?.Obj == null || data.Obj.Order == null)
+                {
+                    Console.WriteLine("Invalid webhook data.");
+                    return BadRequest("Invalid webhook request.");
+                }
+
+                // Extract data safely
+                string status = data.Obj.Success;
+                string orderId = data.Obj.Order.MerchantOrderId;
+                decimal amountPaid = data.Obj.AmountCents / 100m; // Convert cents to EGP
+
+                if (string.IsNullOrEmpty(status) || string.IsNullOrEmpty(orderId))
+                {
+                    Console.WriteLine("Missing required fields in webhook data.");
+                    return BadRequest("Invalid webhook request.");
+                }
+
+                if (status != "true")
+                {
+                    Console.WriteLine("Payment was not successful.");
+                    return BadRequest("Payment not successful.");
+                }
+
+                // Find vehicle entry by orderId
+                var vehicleEntry = await vehicleOwnerRepo.FindVehicleEntry(int.Parse(orderId));
+
+                if (vehicleEntry != null)
+                {
+                    vehicleEntry.IsPaid = true;
+                    string paymentType = vehicleEntry.FineValue > 0 ? "Fee and Fine" : "Fee";
+
+                    var transaction = new Transaction
+                    {
+                        Amount = vehicleEntry.FeeValue + (vehicleEntry.FineValue ?? 0),
+                        PaymentType = paymentType,
+                        TransactionDate = DateTime.UtcNow,
+                        Status = "Success",
+                        VehicleOwnerId = vehicleEntry.vehicle.VehicleOwnerId
+                    };
+
+                    await vehicleOwnerRepo.AddTransaction(transaction);
+
+                    Console.WriteLine($"Vehicle Entry {vehicleEntry.Id} marked as paid.");
+
+                    // Send real-time notification via SignalR
+                    await hubContext.Clients.User(vehicleEntry.vehicle.VehicleOwner.AppUserId)
+                        .SendAsync("ReceiveNotification", new
+                        {
+                            Title = "Payment Successful",
+                            Message = $"Your payment of {amountPaid} EGP has been received.",
+                            Date = DateTime.UtcNow
+                        });
+                }
+                else
+                {
+                    Console.WriteLine($"No matching vehicle entry found for Order ID: {orderId}");
+                    return NotFound("No matching order found.");
+                }
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error in Webhook: " + ex.Message);
+                return StatusCode(500, "Internal Server Error: " + ex.Message);
+            }
+        }
+
+
 
     }
 }
