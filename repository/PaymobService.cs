@@ -18,7 +18,7 @@ namespace GateHub.repository
             this.context = context;
         }
 
-        public async Task<string> InitiatePayment(VehicleOwner owner,decimal amount,int vehicleEntryId,string purpose)
+        public async Task<string> InitiatePayment(VehicleOwner owner,decimal amount,string vehicleEntryIds,string purpose)
         {
             //step 1: get authentication token from paymob
             var authRequest = new { api_key = configuration["Paymob:APIKey"] };
@@ -52,7 +52,7 @@ namespace GateHub.repository
                 amount_cents = (int)(amount * 100),
                 expiration = 3600,
                 order_id = orderId,
-                currency = "EGP",  // Ensure currency is present
+                currency = "EGP",  
                 billing_data = new
                 {
                     first_name = owner.PhoneNumber ?? "Test",
@@ -66,7 +66,7 @@ namespace GateHub.repository
                     city = "Cairo",
                     country = "EG",
                     postal_code = "12345",
-                    extra_description = purpose
+                    extra_description = vehicleEntryIds,
                 },
                 integration_id = configuration["Paymob:IntegrationID"]
             };

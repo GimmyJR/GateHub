@@ -73,9 +73,21 @@ namespace GateHub.repository
 
         public async Task<VehicleEntry> FindVehicleEntry(int vehicleEntryId)
         {
-            var vehicleEntry = await context.VehicleEntries.FindAsync(vehicleEntryId);
+            var vehicleEntry = await context.VehicleEntries
+                .Include(ve => ve.vehicle)  // Include Vehicle
+                .ThenInclude(v => v.VehicleOwner)  // Include VehicleOwner inside Vehicle
+                .FirstOrDefaultAsync(ve => ve.Id == vehicleEntryId);  // Find by ID
 
             return vehicleEntry;
+        }
+
+        public async Task<List<VehicleEntry>> GetVehicleEntriesByIds(List<int> vehicleEntryIds)
+        {
+            return await context.VehicleEntries
+                .Where(ve => vehicleEntryIds.Contains(ve.Id))
+                .Include(ve => ve.vehicle)
+                .ThenInclude(v => v.VehicleOwner)
+                .ToListAsync();
         }
 
         public async Task AddTransaction(Transaction transaction)

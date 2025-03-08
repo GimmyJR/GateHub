@@ -261,10 +261,50 @@ namespace GateHub.Controllers
             if (vehicleEntry.IsPaid)
                 return BadRequest("This entry has already been paid.");
 
-            string paymentUrl = await paymobService.InitiatePayment(owner, vehicleEntry.FeeValue +(vehicleEntry.FineValue ?? 0) , vehicleEntry.Id, "Vehicle Entry Payment");
+            string paymentUrl = await paymobService.InitiatePayment(owner, vehicleEntry.FeeValue +(vehicleEntry.FineValue ?? 0) , vehicleEntry.Id.ToString(), "Vehicle Entry Payment");
             
             return Ok(new { message = "Redirect to this URL for payment", paymentUrl });
 
+        }
+
+        [HttpPost("pay-multiple-vehicle-entries")]
+        public async Task<IActionResult> PayMultipleVehicleEntries([FromBody] List<int> vehicleEntryIds)
+        {
+            var token = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+
+            var handler = new JwtSecurityTokenHandler();
+            var jwtToken = handler.ReadToken(token) as JwtSecurityToken;
+
+            if (jwtToken == null)
+                return Unauthorized();
+
+            var userId = jwtToken.Claims.First(claim => claim.Type == ClaimTypes.NameIdentifier)?.Value;
+
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Unauthorized("User ID not found in token.");
+            }
+
+            var owner = await vehicleOwnerRepo.GetVehicleOwner(userId);
+
+            if (owner == null)
+                return NotFound("Vehicle owner not found.");
+
+            var vehicleEntries = await vehicleOwnerRepo.GetVehicleEntriesByIds(vehicleEntryIds);
+
+            if (!vehicleEntries.Any())
+                return NotFound("No valid vehicle entries found.");
+
+            // Calculate total amount (fees + fines)
+            decimal totalAmount = vehicleEntries.Sum(ve => ve.FeeValue + (ve.FineValue ?? 0));
+
+            // Convert list of IDs to comma-separated string
+            string vehicleEntryIdsString = string.Join(",", vehicleEntryIds);
+
+            // Initiate payment for multiple entries
+            string paymentUrl = await paymobService.InitiatePayment(owner, totalAmount, vehicleEntryIdsString, "Multiple Vehicle Entries Payment");
+
+            return Ok(new { message = "Redirect to this URL for payment", paymentUrl });
         }
 
         [HttpPost("recharge-balance")]
@@ -291,7 +331,7 @@ namespace GateHub.Controllers
             if (owner == null)
                 return NotFound("Vehicle owner not found.");
 
-            string paymentUrl = await paymobService.InitiatePayment(owner, dto.Amount, 0, "Balance Recharge");
+            string paymentUrl = await paymobService.InitiatePayment(owner, dto.Amount, "0", "Balance Recharge");
             return Ok(new { message = "Redirect to this URL for payment", paymentUrl });
         }
 
@@ -302,75 +342,74 @@ namespace GateHub.Controllers
             {
                 Console.WriteLine("Webhook Received: " + JsonSerializer.Serialize(data));
 
-                if (data?.Obj == null || data.Obj.Order == null)
+                if (data?.Obj == null || data.Obj.Order == null || data.Obj.PaymentKeyClaims?.BillingData == null)
                 {
-                    Console.WriteLine("Invalid webhook data.");
                     return BadRequest("Invalid webhook request.");
                 }
 
-                // Extract data safely
-                string status = data.Obj.Success;
-                string orderId = data.Obj.Order.MerchantOrderId;
-                decimal amountPaid = data.Obj.AmountCents / 100m; // Convert cents to EGP
+                bool status = data.Obj.Success;
+                decimal amountPaid = data.Obj.AmountCents / 100m;
 
-                if (string.IsNullOrEmpty(status) || string.IsNullOrEmpty(orderId))
+                if (!status)
                 {
-                    Console.WriteLine("Missing required fields in webhook data.");
-                    return BadRequest("Invalid webhook request.");
-                }
-
-                if (status != "true")
-                {
-                    Console.WriteLine("Payment was not successful.");
                     return BadRequest("Payment not successful.");
                 }
 
-                // Find vehicle entry by orderId
-                var vehicleEntry = await vehicleOwnerRepo.FindVehicleEntry(int.Parse(orderId));
+                // **Extract `vehicleEntryIds` from billing_data["extra_description"]**
+                string vehicleEntryIdsString = data.Obj.PaymentKeyClaims.BillingData.ExtraDescription;
+                var vehicleEntryIds = vehicleEntryIdsString.Split(',').Select(int.Parse).ToList();
 
-                if (vehicleEntry != null)
+                Console.WriteLine($"✅ Processing payment for Vehicle Entry IDs: {vehicleEntryIdsString}, Amount: {amountPaid} EGP");
+
+                var vehicleEntries = await vehicleOwnerRepo.GetVehicleEntriesByIds(vehicleEntryIds);
+
+                if (!vehicleEntries.Any())
+                {
+                    return NotFound("No matching vehicle entries found.");
+                }
+
+                decimal totalAmount = 0;
+                int vehicleOwnerId = 0;
+                string appUserId = "";
+
+                foreach (var vehicleEntry in vehicleEntries)
                 {
                     vehicleEntry.IsPaid = true;
-                    string paymentType = vehicleEntry.FineValue > 0 ? "Fee and Fine" : "Fee";
-
-                    var transaction = new Transaction
-                    {
-                        Amount = vehicleEntry.FeeValue + (vehicleEntry.FineValue ?? 0),
-                        PaymentType = paymentType,
-                        TransactionDate = DateTime.UtcNow,
-                        Status = "Success",
-                        VehicleOwnerId = vehicleEntry.vehicle.VehicleOwnerId
-                    };
-
-                    await vehicleOwnerRepo.AddTransaction(transaction);
-
-                    Console.WriteLine($"Vehicle Entry {vehicleEntry.Id} marked as paid.");
-
-                    // Send real-time notification via SignalR
-                    await hubContext.Clients.User(vehicleEntry.vehicle.VehicleOwner.AppUserId)
-                        .SendAsync("ReceiveNotification", new
-                        {
-                            Title = "Payment Successful",
-                            Message = $"Your payment of {amountPaid} EGP has been received.",
-                            Date = DateTime.UtcNow
-                        });
+                    totalAmount += vehicleEntry.FeeValue + (vehicleEntry.FineValue ?? 0);
+                    vehicleOwnerId = vehicleEntry.vehicle.VehicleOwnerId;
+                    appUserId = vehicleEntry.vehicle.VehicleOwner.AppUserId;
                 }
-                else
+
+
+                // **Store the transaction**
+                var transaction = new Transaction
                 {
-                    Console.WriteLine($"No matching vehicle entry found for Order ID: {orderId}");
-                    return NotFound("No matching order found.");
-                }
+                    Amount = totalAmount,
+                    PaymentType = "Vehicle Entry Payment",
+                    TransactionDate = DateTime.UtcNow,
+                    Status = "Success",
+                    VehicleOwnerId = vehicleOwnerId
+                };
+
+                await vehicleOwnerRepo.AddTransaction(transaction);
+
+
+                // **Send real-time notification via SignalR**
+                await hubContext.Clients.User(appUserId)
+                    .SendAsync("ReceiveNotification", new
+                    {
+                        Title = "Payment Successful",
+                        Message = $"Your payment of {amountPaid} EGP has been received.",
+                        Date = DateTime.UtcNow
+                    });
 
                 return Ok();
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Error in Webhook: " + ex.Message);
                 return StatusCode(500, "Internal Server Error: " + ex.Message);
             }
         }
-
-
 
     }
 }
