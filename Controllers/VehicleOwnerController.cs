@@ -295,6 +295,12 @@ namespace GateHub.Controllers
             if (!vehicleEntries.Any())
                 return NotFound("No valid vehicle entries found.");
 
+            foreach (var vehicleEntry in vehicleEntries)
+            {
+                if (vehicleEntry.IsPaid)
+                    return BadRequest("This entry has already been paid.");
+            }
+
             // Calculate total amount (fees + fines)
             decimal totalAmount = vehicleEntries.Sum(ve => ve.FeeValue + (ve.FineValue ?? 0));
 
@@ -331,8 +337,83 @@ namespace GateHub.Controllers
             if (owner == null)
                 return NotFound("Vehicle owner not found.");
 
-            string paymentUrl = await paymobService.InitiatePayment(owner, dto.Amount, "0", "Balance Recharge");
+            string paymentUrl = await paymobService.InitiatePayment(owner, dto.Amount, "Balance Recharge", "Balance Recharge");
             return Ok(new { message = "Redirect to this URL for payment", paymentUrl });
+        }
+
+        [HttpPost("pay-from-balance")]
+        public async Task<IActionResult> PayFromBalance([FromBody] List<int> vehicleEntryIds)
+        {
+            var token = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+
+            var handler = new JwtSecurityTokenHandler();
+            var jwtToken = handler.ReadToken(token) as JwtSecurityToken;
+
+            if (jwtToken == null)
+                return Unauthorized();
+
+            var userId = jwtToken.Claims.First(claim => claim.Type == ClaimTypes.NameIdentifier)?.Value;
+
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Unauthorized("User ID not found in token.");
+            }
+
+            var owner = await vehicleOwnerRepo.GetVehicleOwner(userId);
+
+            if (owner == null)
+                return NotFound("Vehicle owner not found.");
+
+            var vehicleEntries = await vehicleOwnerRepo.GetVehicleEntriesByIds(vehicleEntryIds);
+
+            if (!vehicleEntries.Any())
+                return NotFound("No valid vehicle entries found.");
+
+            foreach (var vehicleEntry in vehicleEntries)
+            {
+                if (vehicleEntry.IsPaid)
+                    return BadRequest("This entry has already been paid.");
+            }
+
+            // **Calculate total amount**
+            decimal totalAmount = vehicleEntries.Sum(ve => ve.FeeValue + (ve.FineValue ?? 0));
+
+            if (owner.Balance < totalAmount)
+                return BadRequest("Insufficient balance to complete the payment.");
+
+            // **Deduct balance & mark entries as paid**
+            owner.Balance -= totalAmount;
+
+            foreach (var vehicleEntry in vehicleEntries)
+            {
+                vehicleEntry.IsPaid = true;
+            }
+
+            // **Save changes**
+            await vehicleOwnerRepo.SaveChangesAsync();
+
+            // **Store transaction**
+            var transaction = new Transaction
+            {
+                Amount = totalAmount,
+                PaymentType = "Balance Payment",
+                TransactionDate = DateTime.UtcNow,
+                Status = "Success",
+                VehicleOwnerId = owner.Id
+            };
+
+            await vehicleOwnerRepo.AddTransaction(transaction);
+
+            // **Send real-time notification**
+            await hubContext.Clients.User(owner.AppUserId)
+                .SendAsync("ReceiveNotification", new
+                {
+                    Title = "Payment Successful",
+                    Message = $"Your payment of {totalAmount} EGP has been deducted from your balance.",
+                    Date = DateTime.UtcNow
+                });
+
+            return Ok(new { message = "Payment successful", remainingBalance = owner.Balance });
         }
 
         [HttpPost("webhook")]
@@ -340,8 +421,6 @@ namespace GateHub.Controllers
         {
             try
             {
-                Console.WriteLine("Webhook Received: " + JsonSerializer.Serialize(data));
-
                 if (data?.Obj == null || data.Obj.Order == null || data.Obj.PaymentKeyClaims?.BillingData == null)
                 {
                     return BadRequest("Invalid webhook request.");
@@ -349,17 +428,53 @@ namespace GateHub.Controllers
 
                 bool status = data.Obj.Success;
                 decimal amountPaid = data.Obj.AmountCents / 100m;
+                string vehicleEntryIdsString = data.Obj.PaymentKeyClaims.BillingData.ExtraDescription;
 
                 if (!status)
                 {
                     return BadRequest("Payment not successful.");
                 }
 
-                // **Extract `vehicleEntryIds` from billing_data["extra_description"]**
-                string vehicleEntryIdsString = data.Obj.PaymentKeyClaims.BillingData.ExtraDescription;
+
+                // **Check if the payment is for a balance recharge**
+                if (vehicleEntryIdsString == "Balance Recharge")
+                {
+                    string natId = data.Obj.PaymentKeyClaims.BillingData.Nat_Id; 
+                    var owner = await vehicleOwnerRepo.GetVehicleOwnerByNatId(natId);
+
+                    if (owner == null)
+                    {
+                        return NotFound("Vehicle owner not found.");
+                    }
+
+                    owner.Balance += amountPaid;
+                    await vehicleOwnerRepo.SaveChangesAsync();
+
+                    var rechargeTransaction = new Transaction
+                    {
+                        Amount = amountPaid,
+                        PaymentType = "Balance Recharge",
+                        TransactionDate = DateTime.UtcNow,
+                        Status = "Success",
+                        VehicleOwnerId = owner.Id
+                    };
+
+                    await vehicleOwnerRepo.AddTransaction(rechargeTransaction);
+
+                    // Send real-time notification
+                    await hubContext.Clients.User(owner.AppUserId)
+                        .SendAsync("ReceiveNotification", new
+                        {
+                            Title = "Balance Recharged",
+                            Message = $"Your balance has been successfully recharged with {amountPaid} EGP.",
+                            Date = DateTime.UtcNow
+                        });
+
+                    return Ok();
+                }
+
                 var vehicleEntryIds = vehicleEntryIdsString.Split(',').Select(int.Parse).ToList();
 
-                Console.WriteLine($"✅ Processing payment for Vehicle Entry IDs: {vehicleEntryIdsString}, Amount: {amountPaid} EGP");
 
                 var vehicleEntries = await vehicleOwnerRepo.GetVehicleEntriesByIds(vehicleEntryIds);
 

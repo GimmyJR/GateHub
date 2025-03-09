@@ -34,6 +34,7 @@ namespace GateHub.repository
         {
             var owner = await context.VehicleOwners
                 .Include(vo => vo.Vehicles)
+                .Include(ve => ve.appUser)
                 .FirstOrDefaultAsync(vo => vo.AppUserId == userId);
 
             return owner;
@@ -93,6 +94,19 @@ namespace GateHub.repository
         public async Task AddTransaction(Transaction transaction)
         {
             context.Transactions.Add(transaction);
+            await context.SaveChangesAsync();
+        }
+
+        public async Task<VehicleOwner> GetVehicleOwnerByNatId(string natId)
+        {
+            var owner = await context.VehicleOwners
+                .FirstOrDefaultAsync(vo => vo.appUser.NatId == natId);
+
+            return owner;
+        }
+
+        public async Task SaveChangesAsync()
+        {
             await context.SaveChangesAsync();
         }
     }

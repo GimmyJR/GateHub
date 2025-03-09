@@ -55,7 +55,7 @@ namespace GateHub.repository
                 currency = "EGP",  
                 billing_data = new
                 {
-                    first_name = owner.PhoneNumber ?? "Test",
+                    first_name = owner.appUser.NatId ,
                     last_name = "User",
                     email = "test@example.com",
                     phone_number = owner.PhoneNumber ,

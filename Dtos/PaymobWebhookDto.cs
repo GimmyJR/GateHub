@@ -48,5 +48,8 @@ namespace GateHub.Dtos
     {
         [JsonPropertyName("extra_description")]
         public string ExtraDescription { get; set; }
+
+        [JsonPropertyName("first_name")]
+        public string Nat_Id { get; set; }
     }
 }
