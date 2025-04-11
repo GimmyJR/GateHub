@@ -88,9 +88,16 @@ namespace GateHub.Controllers
                 return Unauthorized($"User does not have the role '{dto.Role}'.");
             }
 
+            var role = (await userManager.GetRolesAsync(user)).FirstOrDefault();
+
+            if (role != "Admin")
+            {
+                return Unauthorized("User is not assigned to the 'Admin' role.");
+            }
+
             var tokenString = generateTokenService.GenerateJwtTokenAsync(user);
 
-            return Ok(new { user, tokenString });
+            return Ok(new { user, tokenString, role });
 
         }
 
