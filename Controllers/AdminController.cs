@@ -61,6 +61,7 @@ namespace GateHub.Controllers
             return Ok(user);
         }
 
+        
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] MultiRoleLoginDto dto)
         {
@@ -109,6 +110,7 @@ namespace GateHub.Controllers
             return Ok("logout successful");
         }
 
+        
         [HttpPost("add-gate")]
         public async Task<IActionResult> AddGate([FromBody] GateCreateDto dto)
         {
@@ -122,6 +124,7 @@ namespace GateHub.Controllers
             return Ok(dto);
         }
 
+        
         [HttpGet("GetGateById/{id}")]
         public async Task<IActionResult> GetGateById(int id)
         {
@@ -146,6 +149,8 @@ namespace GateHub.Controllers
 
             return Ok(dto);
         }
+        
+        
         [HttpGet("GetVehicleById/{id}")]
         public async Task<IActionResult> GetVehicleById(int id)
         {
@@ -155,6 +160,7 @@ namespace GateHub.Controllers
             return Ok(vehicle);
         }
 
+        
         [HttpPost("AddLostVehicle")]
         public async Task<IActionResult> AddLostVehicle([FromBody] LostVehicleCreationDto dto)
         {
@@ -172,6 +178,7 @@ namespace GateHub.Controllers
             return Ok(dto);
         }
 
+        
         [HttpGet("getallLostVehicles")]
         public async Task<IActionResult> GetAllLostVehicles()
         {
@@ -180,6 +187,21 @@ namespace GateHub.Controllers
             return Ok(lostVehicles);
         }
 
+        
+        [HttpPost("RecoverVehicle")]
+        public async Task<IActionResult> RecoverVehicle (RecoverVehicleDTO dto)
+        {
+            if (! ModelState.IsValid)
+            {
+                return BadRequest(ModelState);  
+            }
+
+            await   adminRepo.RecoverVehicle(dto);
+            return Ok(dto);
+
+        }
+
+        
         [HttpPost("AddFee")]
         public async Task<IActionResult> AddGateFee([FromBody] GateFeeDto dto)
         {
