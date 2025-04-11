@@ -99,10 +99,25 @@ namespace GateHub.repository
         public async Task<List<LostVehicle>> GetAllLostVehicles()
         {
             var lostVehicles = await context.LostVehicles
-                .Include(lv => lv.Vehicle)
+               .Where(v =>v.IsFound == false)
                 .ToListAsync();
 
             return lostVehicles;
+        }
+
+        public async Task RecoverVehicle (RecoverVehicleDTO dto)
+        {
+            var lostVehicle = await context.LostVehicles.FirstOrDefaultAsync(v => v.PlateNumber == dto.PlateNum);
+            if (lostVehicle == null)
+            {
+                return;
+            }
+            else
+            {
+                lostVehicle.IsFound = true;
+            }
+
+            await context.SaveChangesAsync();
         }
     }
 }

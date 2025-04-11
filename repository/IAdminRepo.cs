@@ -12,6 +12,7 @@ namespace GateHub.repository
         public Task AddLostVehicle(LostVehicleCreationDto dto);
         public Task<Vehicle> FindVehicleByPlateNumber(string PlateNumber);
         public Task<List<LostVehicle>> GetAllLostVehicles();
+        public Task RecoverVehicle(RecoverVehicleDTO dto);
 
     }
 }
