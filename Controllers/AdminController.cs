@@ -233,5 +233,46 @@ namespace GateHub.Controllers
             return Ok(gateFee);
         }
 
+
+
+        // dashboard actions
+
+        [HttpGet("VehicleCount")]
+        public async Task<IActionResult> TotalVehicleEnteredToDay ()
+        {
+            var count = await adminRepo.VehicleCount();
+            if (count != null)
+            {
+                return Ok(count);
+            }
+            else
+                return BadRequest();
+
+
+        }
+
+        [HttpGet ("TotalRevenue")]
+        public async Task<IActionResult> TotalRevenueMonthly ()
+        {
+            var revenue = await adminRepo.TotalRevenue();
+            if (revenue != null) 
+            { 
+                return Ok(revenue);
+            }
+            else 
+            { 
+                return BadRequest(); 
+            }
+
+        }
+
+        [HttpGet("LostVehicleCount")]
+        public async Task<IActionResult> GetLostVehicleCount ()
+        {
+            var count = await adminRepo.GetLostVehicleCount();
+            return Ok(count);
+        }
+
+
     }
 }

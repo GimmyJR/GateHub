@@ -119,5 +119,44 @@ namespace GateHub.repository
 
             await context.SaveChangesAsync();
         }
+        public async Task<DailyVehicleEntryCountDto> VehicleCount ()
+        {
+            var today = DateTime.Today;
+
+            var count = await context.VehicleEntries
+                .CountAsync(ve => ve.Date.Date == today);
+
+            return new DailyVehicleEntryCountDto
+            {
+                Date = today,
+                Count = count
+            };
+        }
+        public async Task<MonthlyPaymentSummaryDto> TotalRevenue()
+        {
+            var now = DateTime.Now;
+            var startOfMonth = new DateTime(now.Year, now.Month, 1);
+            var startOfNextMonth = startOfMonth.AddMonths(1);
+
+            var entries = await context.VehicleEntries.Where(ve => ve.IsPaid == true &&
+                                                        ve.Date >= startOfMonth &&
+                                                        ve.Date < startOfNextMonth).ToListAsync();
+            var summary = new MonthlyPaymentSummaryDto
+            {
+                TotalFees = entries.Sum(e => e.FeeValue),
+                TotalFines = entries.Sum(e => e.FineValue ?? 0)
+            };
+
+            return summary;
+        }
+        public async Task<int> GetLostVehicleCount()
+        {
+            var lostVehicles = await context.LostVehicles
+               .Where(v => v.IsFound == false).CountAsync();
+
+            return lostVehicles;
+        }
+
+
     }
 }
