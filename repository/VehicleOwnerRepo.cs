@@ -104,6 +104,14 @@ namespace GateHub.repository
 
             return owner;
         }
+       
+        public async Task<List<VehicleEntry>> VehicleEntries(int vehicleId)
+        {
+            List<VehicleEntry> entries = new List<VehicleEntry>();
+
+            entries = await context.VehicleEntries.Where(vi => vi.VehicleId == vehicleId).ToListAsync();
+            return entries;
+        }
 
         public async Task SaveChangesAsync()
         {

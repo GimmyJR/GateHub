@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
+using System.Formats.Asn1;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text.Json;
@@ -523,5 +524,54 @@ namespace GateHub.Controllers
                 return StatusCode(500, "Internal Server Error: " + ex.Message);
             }
         }
+
+        [HttpPost("ChangePassword")]
+        public async Task<IActionResult> changePassword([FromBody] ChangePasswordDto dto)
+        {
+            var token = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+
+            var handler = new JwtSecurityTokenHandler();
+            var jwtToken = handler.ReadToken(token) as JwtSecurityToken;
+
+            if (jwtToken == null)
+                return Unauthorized();
+
+            var userId = jwtToken.Claims.First(claim => claim.Type == ClaimTypes.NameIdentifier)?.Value;
+            var user = await userManager.FindByIdAsync(userId);
+
+
+            if (dto.NewPassword != dto.ConfirmPassword)
+                return BadRequest("New password and confirmation do not match.");
+            
+           var result = await userManager.ChangePasswordAsync(user, dto.CurrentPassword, dto.NewPassword);
+
+            if (!result.Succeeded)
+            {
+                var errors = result.Errors.Select(e => e.Description);
+                return BadRequest(new { Message = "Failed to change password", Errors = errors });
+            }
+
+            await signInManager.RefreshSignInAsync(user); // Optional for cookie-based login
+
+            return Ok(new { Message = "Password changed successfully." });
+
+
+        }
+
+        [HttpGet("VehicleEntries")]
+        public async Task<IActionResult> VehicleEntries (int vehicleId)
+        {
+            if (vehicleId != null || vehicleId != 0 )
+            {
+                var entries = await vehicleOwnerRepo.VehicleEntries(vehicleId);
+                if (entries == null)
+                    return BadRequest("invalid vehicle ID");
+                
+                return Ok(entries);
+            }
+            return BadRequest("Un valid vehicle ID");
+        }
+
+
     }
 }
