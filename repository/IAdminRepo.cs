@@ -16,7 +16,9 @@ namespace GateHub.repository
         public  Task<DailyVehicleEntryCountDto> VehicleCount();
         public Task<MonthlyPaymentSummaryDto> TotalRevenue();
         public Task<int> GetLostVehicleCount();
-
+        public Task<List<DailyReportDto>> GetDailyReport();
+        public Task<List<RecentCarDto>> GetRecentCars();
+        public Task<List<GateTrafficDto>> GetTopGatesToday();
 
     }
 }

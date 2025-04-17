@@ -248,7 +248,6 @@ namespace GateHub.Controllers
             else
                 return BadRequest();
 
-
         }
 
         [HttpGet ("TotalRevenue")]
@@ -273,6 +272,31 @@ namespace GateHub.Controllers
             return Ok(count);
         }
 
+        [HttpGet("DailyReport")]
+        public async Task<IActionResult> GetDailyReport()
+        {
+            
+            var hourlyData = await adminRepo.GetDailyReport();
+
+            return Ok(hourlyData);
+        }
+
+
+        [HttpGet("RecentCars")]
+        public async Task<IActionResult> GetRecentCars()
+        {
+            var recent = await adminRepo.GetRecentCars();
+
+            return Ok(recent);
+        }
+
+        [HttpGet("TopGatesToday")]
+        public async Task<IActionResult> GetTopGatesToday()
+        {
+            var topGates = await adminRepo.GetTopGatesToday();
+
+            return Ok(topGates);
+        }
 
     }
 }

@@ -156,6 +156,74 @@ namespace GateHub.repository
 
             return lostVehicles;
         }
+        public async Task<List<DailyReportDto>> GetDailyReport()
+        {
+            var today = DateTime.Today;
+
+            var hourlyData = await context.VehicleEntries
+                .Where(v => v.Date.Date == today)
+                .GroupBy(v => v.Date.Hour)
+                .Select(g => new DailyReportDto
+                {
+                    Hour = g.Key,
+                    Cars = g.Count(),
+                    Revenue = g.Where(x => x.IsPaid).Sum(x => x.FeeValue),
+                })
+                .ToListAsync();
+
+            var lostVehicles = await context.LostVehicles
+                .Where(lv => lv.ReportedDate.Date == today)
+                .GroupBy(lv => lv.ReportedDate.Hour)
+                .Select(g => new
+                {
+                    Hour = g.Key,
+                    Count = g.Count()
+                })
+                .ToListAsync();
+
+            foreach (var report in hourlyData)
+            {
+                var lost = lostVehicles.FirstOrDefault(l => l.Hour == report.Hour);
+                report.LostVehicles = lost?.Count ?? 0;
+            }
+
+            return hourlyData;
+        }
+
+        public async Task<List<RecentCarDto>> GetRecentCars()
+        {
+            var recent = await context.VehicleEntries
+               .OrderByDescending(v => v.Date)
+               .Take(10)
+               .Select(v => new RecentCarDto
+               {
+                   VehicleLicensePlate = v.vehicle.PlateNumber,
+                   GateName = v.gate.AddressName,
+                   DateOfPassing = v.Date,
+               })
+               .ToListAsync();
+
+            return recent;
+        }
+
+        public async Task<List<GateTrafficDto>> GetTopGatesToday()
+        {
+            var today = DateTime.Today;
+
+            var topGates = await context.VehicleEntries
+                .Where(v => v.Date.Date == today)
+                .GroupBy(v => v.gate.AddressName)
+                .Select(g => new GateTrafficDto
+                {
+                    GateName = g.Key,
+                    VehicleCount = g.Count()
+                })
+                .OrderByDescending(g => g.VehicleCount)
+                .Take(5)
+                .ToListAsync();
+
+            return topGates;
+        }
 
 
     }
