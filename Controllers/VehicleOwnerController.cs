@@ -79,7 +79,6 @@ namespace GateHub.Controllers
             return Ok(vehicleOwner);
         }
 
-
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] VehicleOwnerLoginDto dto)
         {
@@ -114,14 +113,12 @@ namespace GateHub.Controllers
 
         }
 
-
         [HttpPost("logout")]
         public async Task<IActionResult> Logout()
         {
             await signInManager.SignOutAsync();
             return Ok("logout successful");
         }
-
 
         [HttpGet("VOProfile")]
         public async Task<IActionResult> GetVehicleOwnerProfile()
@@ -135,6 +132,7 @@ namespace GateHub.Controllers
                 return Unauthorized();
 
             var userId = jwtToken.Claims.First(claim => claim.Type == ClaimTypes.NameIdentifier).Value;
+
 
             if (string.IsNullOrEmpty(userId))
             {
@@ -525,6 +523,5 @@ namespace GateHub.Controllers
                 return StatusCode(500, "Internal Server Error: " + ex.Message);
             }
         }
-
     }
 }

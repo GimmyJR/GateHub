@@ -3,6 +3,7 @@ using GateHub.Models;
 using GateHub.repository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -297,6 +298,59 @@ namespace GateHub.Controllers
 
             return Ok(topGates);
         }
+
+        [HttpGet("GetVehicleByPlateNumberWithOwner")]
+        public async Task<IActionResult> GetVehicleByPlateNumberWithOwner(string plateNum)
+        {
+            var vehicle = await adminRepo.GetVehicleByPlateNumberWithOwner(plateNum);
+            if (vehicle == null)
+                return NotFound("Vehicle not found with the given Plate Number");
+
+            return Ok(vehicle);
+        }
+
+        [HttpGet("GetOwnerWithVehicles")]
+        public async Task<IActionResult> GetOwnerWithVehicles(string natId)
+        {
+            var result = await adminRepo.GetOwnerWithVehiclesByNatId(natId);
+            if (result == null)
+                return NotFound("Vehicle owner not found with the given National ID");
+
+            return Ok(result);
+        }
+
+        [HttpGet("GetLostVehicleByPlate")]
+        public async Task<IActionResult> GetLostVehicleByPlate(string plateNumber)
+        {
+            var lostVehicle = await adminRepo.GetLostVehicleByPlate(plateNumber);
+            if (lostVehicle == null)
+            {
+                return NotFound("No lost vehicle found with this plate number.");
+            }
+
+            return Ok(new
+            {
+                lostVehicle.Id,
+                lostVehicle.PlateNumber,
+                lostVehicle.ReportedDate,
+                lostVehicle.IsFound,
+                Vehicle = new
+                {
+                    lostVehicle.Vehicle.Id,
+                    lostVehicle.Vehicle.ModelCompany,
+                    lostVehicle.Vehicle.ModelDescription,
+                    lostVehicle.Vehicle.Color,
+                    lostVehicle.Vehicle.Type,
+                    lostVehicle.Vehicle.PlateNumber,
+                    Owner = new
+                    {
+                        lostVehicle.Vehicle.VehicleOwner?.PhoneNumber,
+                        lostVehicle.Vehicle.VehicleOwner?.Address
+                    }
+                }
+            });
+        }
+
 
     }
 }

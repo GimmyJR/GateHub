@@ -78,6 +78,74 @@ namespace GateHub.repository
 
             return vehicle;
         }
+        public async Task<VehicleWithOwnerDto> GetVehicleByPlateNumberWithOwner(string plateNumber)
+        {
+            var vehicle = await context.Vehicles
+                .Include(v => v.VehicleOwner)
+                .FirstOrDefaultAsync(v => v.PlateNumber.ToLower() == plateNumber.ToLower());
+
+            if (vehicle == null) return null;
+
+            return new VehicleWithOwnerDto
+            {
+                Id = vehicle.Id,
+                PlateNumber = vehicle.PlateNumber,
+                LicenseStart = vehicle.LicenseStart,
+                LicenseEnd = vehicle.LicenseEnd,
+                ModelDescription = vehicle.ModelDescription,
+                ModelCompany = vehicle.ModelCompany,
+                Color = vehicle.Color,
+                Type = vehicle.Type,
+                RFID = vehicle.RFID,
+                VehicleOwner = new VehicleOwnerDto
+                {
+                    Id = vehicle.VehicleOwner.Id,
+                    PhoneNumber = vehicle.VehicleOwner.PhoneNumber,
+                    Address = vehicle.VehicleOwner.Address,
+                    License = vehicle.VehicleOwner.License,
+                    Balance = vehicle.VehicleOwner.Balance,
+                    AppUserId = vehicle.VehicleOwner.AppUserId
+                }
+            };
+        }
+        public async Task<VehicleOwnerWithVehiclesDto> GetOwnerWithVehiclesByNatId(string natId)
+        {
+            var owner = await context.VehicleOwners
+                .Include(vo => vo.Vehicles)
+                .FirstOrDefaultAsync(vo => vo.appUser.NatId == natId);
+
+            if (owner == null) return null;
+
+            return new VehicleOwnerWithVehiclesDto
+            {
+                Id = owner.Id,
+                PhoneNumber = owner.PhoneNumber,
+                Address = owner.Address,
+                License = owner.License,
+                Balance = owner.Balance,
+                AppUserId = owner.AppUserId,
+                Vehicles = owner.Vehicles?.Select(v => new VehicleDto
+                {
+                    Id = v.Id,
+                    PlateNumber = v.PlateNumber,
+                    LicenseStart = v.LicenseStart,
+                    LicenseEnd = v.LicenseEnd,
+                    ModelDescription = v.ModelDescription,
+                    ModelCompany = v.ModelCompany,
+                    Color = v.Color,
+                    Type = v.Type,
+                    RFID = v.RFID
+                }).ToList()
+            };
+        }
+        public async Task<LostVehicle> GetLostVehicleByPlate(string plateNumber)
+        {
+            return await context.LostVehicles
+                .Include(lv => lv.Vehicle)
+                .ThenInclude(v => v.VehicleOwner)
+                .FirstOrDefaultAsync(lv => lv.PlateNumber.ToLower() == plateNumber.ToLower() && !lv.IsFound);
+        }
+
         public async Task AddLostVehicle(LostVehicleCreationDto dto)
         {
             // Find the vehicle by plate number (case-insensitive)
