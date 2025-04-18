@@ -293,6 +293,79 @@ namespace GateHub.repository
             return topGates;
         }
 
+        public async Task<List<AllObjectionsDTO>> GetAllObjection()
+        {
+            List<AllObjectionsDTO> objections = new List<AllObjectionsDTO>();
 
+            objections = await context.Objections.Include(o => o.vehicleOwner)
+                                                 .Include(ve => ve.vehicleEntry)
+                                                    .ThenInclude(v => v.vehicle)
+                                                 .Select( o => new AllObjectionsDTO 
+                                                                 {
+                                                                  date= o.date,
+                                                                  Statue = o.Statue,
+                                                                  Description = o.Description,
+                                                                  VehicleOwnerName = o.vehicleOwner.appUser.Name,
+                                                                  PlateNum = o.vehicleEntry.vehicle.PlateNumber
+
+                                                                 })
+                                                 .ToListAsync();
+            return objections;                                                
+
+        }
+        public async Task<ObjectionDetailsDTO> GetObjectionDetialsByID(int id)
+        {
+            var details = await context.Objections.Where(o => o.Id == id)
+                                                .Select(o => new ObjectionDetailsDTO
+                                                {
+                                                    // Objection details
+                                                    ObjectionId = o.Id,
+                                                    ObjectionStatue = o.Statue,
+                                                    ObjectionDate = o.date,
+                                                    ObjectionDescription = o.Description,
+
+                                                    // Entry details
+                                                    EntrieFeeValue = o.vehicleEntry.FeeValue,
+                                                    EntrieFineValue = o.vehicleEntry.FineValue,
+                                                    EntrieFineType = o.vehicleEntry.FineType,
+                                                    EntrieDate = o.vehicleEntry.Date,
+                                                    EntrieIsPaid = o.vehicleEntry.IsPaid,
+                                                    GateType = o.vehicleEntry.gate.Type,
+                                                    GateAddressName = o.vehicleEntry.gate.AddressName,
+
+                                                    // Vehicle owner details
+                                                    VehivleOwnerPhoneNumb = o.vehicleOwner.PhoneNumber,
+                                                    VehivleOwnerName = o.vehicleOwner.appUser.Name,
+
+                                                    // Vehicle details
+                                                    vehiclePlateNumber = o.vehicleEntry.vehicle.PlateNumber,
+                                                    vehicleLicenseStart = o.vehicleEntry.vehicle.LicenseStart,
+                                                    vehicleLicenseEnd = o.vehicleEntry.vehicle.LicenseEnd,
+                                                    vehicleModelDescription = o.vehicleEntry.vehicle.ModelDescription,
+                                                    vehicleModelCompany = o.vehicleEntry.vehicle.ModelCompany,
+                                                    vehicleColor = o.vehicleEntry.vehicle.Color,
+                                                    vehicleType = o.vehicleEntry.vehicle.Type
+                                                })
+                                                .FirstOrDefaultAsync();
+
+      
+            return details;
+
+        }
+        public async Task<Vehicle> updateVehicle( int vehicleId , UpdateVehicleDto dto)
+        {
+            var vehicleformDB = await GetVehicleById(vehicleId);
+
+            if (vehicleformDB == null)
+                return null;
+
+            vehicleformDB.LicenseStart = dto.LicenseStart;
+            vehicleformDB.LicenseEnd = dto.LicenseEnd;
+            vehicleformDB.Color = dto.Color;
+            vehicleformDB.RFID = dto.RFID;
+
+             await context.SaveChangesAsync();
+            return vehicleformDB;
+        }
     }
 }

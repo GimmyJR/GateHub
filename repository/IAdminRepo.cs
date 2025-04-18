@@ -22,6 +22,11 @@ namespace GateHub.repository
         public Task<List<DailyReportDto>> GetDailyReport();
         public Task<List<RecentCarDto>> GetRecentCars();
         public Task<List<GateTrafficDto>> GetTopGatesToday();
+        public Task<List<AllObjectionsDTO>> GetAllObjection();
+        public Task<ObjectionDetailsDTO> GetObjectionDetialsByID(int id);
+        public Task<Vehicle> updateVehicle(int vehicleId, UpdateVehicleDto dto);
+
+
 
     }
 }
