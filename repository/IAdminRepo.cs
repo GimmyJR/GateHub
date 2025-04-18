@@ -28,5 +28,11 @@ namespace GateHub.repository
         public Task<List<LostVehicleAlertDto>> GetRecentLostVehicleAlerts();
         public string GetTimeAgo(DateTime time);
         public Task<VehicleOwner> UpdateVehicleOwner(int OwnerId, [FromBody] VehicleOwnerUpdateDto dto);
+
+        public Task<List<AllObjectionsDTO>> GetAllObjection();
+        public Task<ObjectionDetailsDTO> GetObjectionDetialsByID(int id);
+        public Task<Vehicle> updateVehicle(int vehicleId, UpdateVehicleDto dto);
+
+
     }
 }

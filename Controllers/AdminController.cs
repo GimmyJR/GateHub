@@ -386,7 +386,7 @@ namespace GateHub.Controllers
             return Ok(new { message = "Objection rejected and value increased by 10%" });
         }
 
-        [HttpPut("update-vehicle-owner")]
+        [HttpPatch("update-vehicle-owner")]
         public async Task<IActionResult> UpdateVehicleOwner(int OwnerId,[FromBody] VehicleOwnerUpdateDto dto)
         {
             if (!ModelState.IsValid)
@@ -397,6 +397,46 @@ namespace GateHub.Controllers
                 return NotFound("Vehicle owner not found.");
 
             return Ok(new { message = "Vehicle owner updated successfully.", owner });
+        }
+
+        [HttpGet("Objections")]
+        public async Task<IActionResult> GetAllObjections ()
+        {
+            var objections = await adminRepo.GetAllObjection();
+            if (objections == null)
+                return NotFound();
+           
+            return Ok(objections);
+
+        }
+
+        
+        [HttpGet("ObjectionDetails")]
+        public async Task<IActionResult> GetObjectionDetails(int  objectionId)
+        {
+            var details = await adminRepo.GetObjectionDetialsByID(objectionId); 
+            if (details != null)
+            {
+                return Ok (details);
+            }
+            return BadRequest("InValid Objection ID");
+
+        }
+
+
+        [HttpPatch("EditVehicle")]
+        public async Task<IActionResult> EditVehicle(int vehicleId , [FromBody] UpdateVehicleDto dto)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var vehicleUpdated = await adminRepo.updateVehicle(vehicleId, dto);   
+            
+            if (vehicleUpdated != null) 
+            {
+                return Ok(vehicleUpdated);
+            }
+            return BadRequest("vehicle Not Found"); 
         }
 
     }
