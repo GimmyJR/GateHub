@@ -299,6 +299,20 @@ namespace GateHub.Controllers
             return Ok(topGates);
         }
 
+        [HttpGet("GetRecentLostVehicleAlerts")]
+        public async Task<IActionResult> GetRecentLostVehicleAlerts()
+        {
+            var alerts = await adminRepo.GetRecentLostVehicleAlerts();
+
+            var formattedAlerts = alerts.Select(a => new
+            {
+                TimeAgo = adminRepo.GetTimeAgo(a.DetectedTime),
+                Message = $"Lost vehicle <strong>{a.PlateNumber}</strong> detected at {a.Gate}."
+            });
+
+            return Ok(formattedAlerts);
+        }
+
         [HttpGet("GetVehicleByPlateNumberWithOwner")]
         public async Task<IActionResult> GetVehicleByPlateNumberWithOwner(string plateNum)
         {
@@ -351,6 +365,39 @@ namespace GateHub.Controllers
             });
         }
 
+        [HttpPost("AcceptObjection/{id}")]
+        public async Task<IActionResult> AcceptObjection(int id)
+        {
+            var objection = await adminRepo.AcceptObjection(id);
+            if (objection == null)
+                return NotFound("Objection not found.");
+
+            return Ok(new { message = "Objection accepted successfully" });
+        }
+
+
+        [HttpPost("RejectObjection/{id}")]
+        public async Task<IActionResult> RejectObjection(int id)
+        {
+            var objection = await adminRepo.RejectObjection(id);
+            if (objection == null)
+                return NotFound("Objection not found");
+
+            return Ok(new { message = "Objection rejected and value increased by 10%" });
+        }
+
+        [HttpPut("update-vehicle-owner")]
+        public async Task<IActionResult> UpdateVehicleOwner(int OwnerId,[FromBody] VehicleOwnerUpdateDto dto)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var owner = await adminRepo.UpdateVehicleOwner(OwnerId,dto);
+            if (owner == null)
+                return NotFound("Vehicle owner not found.");
+
+            return Ok(new { message = "Vehicle owner updated successfully.", owner });
+        }
 
     }
 }

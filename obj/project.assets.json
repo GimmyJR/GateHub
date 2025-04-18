@@ -6064,19 +6064,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\lenovo-\\.nuget\\packages\\": {}
+    "C:\\Users\\ELSERAG\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\lenovo-\\Desktop\\grauation project\\New folder\\GateHub\\GateHub.csproj",
+      "projectUniqueName": "D:\\Backend Material\\Projects\\dot net projects\\GateHub\\GateHub.csproj",
       "projectName": "GateHub",
-      "projectPath": "C:\\Users\\lenovo-\\Desktop\\grauation project\\New folder\\GateHub\\GateHub.csproj",
-      "packagesPath": "C:\\Users\\lenovo-\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\lenovo-\\Desktop\\grauation project\\New folder\\GateHub\\obj\\",
+      "projectPath": "D:\\Backend Material\\Projects\\dot net projects\\GateHub\\GateHub.csproj",
+      "packagesPath": "C:\\Users\\ELSERAG\\.nuget\\packages\\",
+      "outputPath": "D:\\Backend Material\\Projects\\dot net projects\\GateHub\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\lenovo-\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\ELSERAG\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -6096,6 +6096,11 @@
         "warnAsError": [
           "NU1605"
         ]
+      },
+      "restoreAuditProperties": {
+        "enableAudit": "true",
+        "auditLevel": "low",
+        "auditMode": "direct"
       }
     },
     "frameworks": {
@@ -6152,7 +6157,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.100/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.204/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

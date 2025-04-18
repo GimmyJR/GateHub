@@ -11,20 +11,16 @@
       "RelativeMoniker": "D:0:0:{86A19443-E36E-42EC-AA0B-BC18F137AC58}|GateHub.csproj|solutionrelative:repository\\adminrepo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{86A19443-E36E-42EC-AA0B-BC18F137AC58}|GateHub.csproj|d:\\backend material\\projects\\dot net projects\\gatehub\\controllers\\vehicleownercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{86A19443-E36E-42EC-AA0B-BC18F137AC58}|GateHub.csproj|solutionrelative:controllers\\vehicleownercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{86A19443-E36E-42EC-AA0B-BC18F137AC58}|GateHub.csproj|d:\\backend material\\projects\\dot net projects\\gatehub\\models\\vehicleentry.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{86A19443-E36E-42EC-AA0B-BC18F137AC58}|GateHub.csproj|solutionrelative:models\\vehicleentry.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{86A19443-E36E-42EC-AA0B-BC18F137AC58}|GateHub.csproj|d:\\backend material\\projects\\dot net projects\\gatehub\\repository\\iadminrepo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{86A19443-E36E-42EC-AA0B-BC18F137AC58}|GateHub.csproj|solutionrelative:repository\\iadminrepo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{86A19443-E36E-42EC-AA0B-BC18F137AC58}|GateHub.csproj|d:\\backend material\\projects\\dot net projects\\gatehub\\dtos\\adminregistrationdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{86A19443-E36E-42EC-AA0B-BC18F137AC58}|GateHub.csproj|solutionrelative:dtos\\adminregistrationdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{86A19443-E36E-42EC-AA0B-BC18F137AC58}|GateHub.csproj|d:\\backend material\\projects\\dot net projects\\gatehub\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{86A19443-E36E-42EC-AA0B-BC18F137AC58}|GateHub.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{86A19443-E36E-42EC-AA0B-BC18F137AC58}|GateHub.csproj|d:\\backend material\\projects\\dot net projects\\gatehub\\dtos\\vehicleownerupdatedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{86A19443-E36E-42EC-AA0B-BC18F137AC58}|GateHub.csproj|solutionrelative:dtos\\vehicleownerupdatedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -54,40 +50,16 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "VehicleOwnerController.cs",
-              "DocumentMoniker": "D:\\Backend Material\\Projects\\dot net projects\\GateHub\\Controllers\\VehicleOwnerController.cs",
-              "RelativeDocumentMoniker": "Controllers\\VehicleOwnerController.cs",
-              "ToolTip": "D:\\Backend Material\\Projects\\dot net projects\\GateHub\\Controllers\\VehicleOwnerController.cs",
-              "RelativeToolTip": "Controllers\\VehicleOwnerController.cs",
-              "ViewState": "AQIAAOQAAAAAAAAAAAAYwCUAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-17T18:19:46.699Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
               "DocumentIndex": 4,
-              "Title": "AdminRegistrationDto.cs",
-              "DocumentMoniker": "D:\\Backend Material\\Projects\\dot net projects\\GateHub\\Dtos\\AdminRegistrationDto.cs",
-              "RelativeDocumentMoniker": "Dtos\\AdminRegistrationDto.cs",
-              "ToolTip": "D:\\Backend Material\\Projects\\dot net projects\\GateHub\\Dtos\\AdminRegistrationDto.cs",
-              "RelativeToolTip": "Dtos\\AdminRegistrationDto.cs",
-              "ViewState": "AQIAAAgAAAAAAAAAAAA2wA4AAAAFAAAA",
+              "Title": "VehicleOwnerUpdateDto.cs",
+              "DocumentMoniker": "D:\\Backend Material\\Projects\\dot net projects\\GateHub\\Dtos\\VehicleOwnerUpdateDto.cs",
+              "RelativeDocumentMoniker": "Dtos\\VehicleOwnerUpdateDto.cs",
+              "ToolTip": "D:\\Backend Material\\Projects\\dot net projects\\GateHub\\Dtos\\VehicleOwnerUpdateDto.cs",
+              "RelativeToolTip": "Dtos\\VehicleOwnerUpdateDto.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAQAAAAvAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-17T17:46:59.095Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "Program.cs",
-              "DocumentMoniker": "D:\\Backend Material\\Projects\\dot net projects\\GateHub\\Program.cs",
-              "RelativeDocumentMoniker": "Program.cs",
-              "ToolTip": "D:\\Backend Material\\Projects\\dot net projects\\GateHub\\Program.cs",
-              "RelativeToolTip": "Program.cs",
-              "ViewState": "AQIAABkAAAAAAAAAAAAQwCYAAAA1AAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-17T12:51:14.284Z"
+              "WhenOpened": "2025-04-18T18:16:44.744Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -97,21 +69,22 @@
               "RelativeDocumentMoniker": "repository\\IAdminRepo.cs",
               "ToolTip": "D:\\Backend Material\\Projects\\dot net projects\\GateHub\\repository\\IAdminRepo.cs",
               "RelativeToolTip": "repository\\IAdminRepo.cs",
-              "ViewState": "AQIAAAgAAAAAAAAAAAAAwA8AAAAPAAAA",
+              "ViewState": "AQIAABUAAAAAAAAAAAAmwBoAAAA3AAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-16T13:21:42.34Z"
+              "WhenOpened": "2025-04-18T17:43:10.147Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "AdminController.cs",
-              "DocumentMoniker": "D:\\Backend Material\\Projects\\dot net projects\\GateHub\\Controllers\\AdminController.cs",
-              "RelativeDocumentMoniker": "Controllers\\AdminController.cs",
-              "ToolTip": "D:\\Backend Material\\Projects\\dot net projects\\GateHub\\Controllers\\AdminController.cs",
-              "RelativeToolTip": "Controllers\\AdminController.cs",
-              "ViewState": "AQIAAB4BAAAAAAAAAAAAAF8BAAAJAAAA",
+              "DocumentIndex": 2,
+              "Title": "VehicleEntry.cs",
+              "DocumentMoniker": "D:\\Backend Material\\Projects\\dot net projects\\GateHub\\Models\\VehicleEntry.cs",
+              "RelativeDocumentMoniker": "Models\\VehicleEntry.cs",
+              "ToolTip": "D:\\Backend Material\\Projects\\dot net projects\\GateHub\\Models\\VehicleEntry.cs",
+              "RelativeToolTip": "Models\\VehicleEntry.cs",
+              "ViewState": "AQIAAAkAAAAAAAAAAAA4wBgAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-16T11:57:23.807Z",
+              "WhenOpened": "2025-04-18T17:35:40.069Z",
               "EditorCaption": ""
             },
             {
@@ -122,9 +95,22 @@
               "RelativeDocumentMoniker": "repository\\AdminRepo.cs",
               "ToolTip": "D:\\Backend Material\\Projects\\dot net projects\\GateHub\\repository\\AdminRepo.cs",
               "RelativeToolTip": "repository\\AdminRepo.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAJIAAAAJAAAA",
+              "ViewState": "AQIAAFsBAAAAAAAAAAAAAGgBAAA6AAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-16T11:56:38.328Z",
+              "WhenOpened": "2025-04-18T17:33:09.794Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "AdminController.cs",
+              "DocumentMoniker": "D:\\Backend Material\\Projects\\dot net projects\\GateHub\\Controllers\\AdminController.cs",
+              "RelativeDocumentMoniker": "Controllers\\AdminController.cs",
+              "ToolTip": "D:\\Backend Material\\Projects\\dot net projects\\GateHub\\Controllers\\AdminController.cs",
+              "RelativeToolTip": "Controllers\\AdminController.cs",
+              "ViewState": "AQIAAEYBAAAAAAAAAAAuwJEBAAAFAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-18T17:31:46.128Z",
               "EditorCaption": ""
             }
           ]

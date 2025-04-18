@@ -293,6 +293,85 @@ namespace GateHub.repository
             return topGates;
         }
 
+        public async Task<Objection> AcceptObjection(int id)
+        {
+            var objection = await context.Objections.FindAsync(id);
+            if (objection == null)
+                return null;
+
+            objection.Statue = "Accepted";
+            await context.SaveChangesAsync();
+            return objection;
+        }
+
+        public async Task<Objection> RejectObjection(int id)
+        {
+            var objection = await context.Objections.FindAsync(id);
+            if (objection == null)
+                return null;
+
+            objection.Statue = "Rejected";
+
+            var vehicleEntry = await context.VehicleEntries.FindAsync(objection.VehicleEntryId);
+            if (vehicleEntry == null)
+                return null;
+
+
+            if (vehicleEntry.FineValue == 0)
+            {
+                vehicleEntry.FeeValue += vehicleEntry.FeeValue * 0.1m;
+            }
+            vehicleEntry.FineValue += vehicleEntry.FineValue * 0.1m;
+
+            await context.SaveChangesAsync();
+
+            return objection;
+        }
+
+        public async Task<List<LostVehicleAlertDto>> GetRecentLostVehicleAlerts()
+        {
+            var alerts = await (from entry in context.VehicleEntries
+                                join lost in context.LostVehicles on entry.VehicleId equals lost.VehicleId
+                                where !lost.IsFound
+                                orderby entry.Date descending
+                                select new LostVehicleAlertDto
+                                {
+                                    PlateNumber = entry.vehicle.PlateNumber,
+                                    Gate = entry.gate.AddressName,
+                                    DetectedTime = entry.Date
+                                })
+                               .Take(10)
+                               .ToListAsync();
+
+            return alerts;
+        }
+
+        public string GetTimeAgo(DateTime time)
+        {
+            var span = DateTime.Now - time;
+            if (span.TotalMinutes < 1)
+                return "Just now";
+            if (span.TotalMinutes < 60)
+                return $"{(int)span.TotalMinutes} min";
+            if (span.TotalHours < 24)
+                return $"{(int)span.TotalHours} hr";
+            return $"{(int)span.TotalDays} day";
+        }
+
+        public async Task<VehicleOwner> UpdateVehicleOwner(int OwnerId, [FromBody] VehicleOwnerUpdateDto dto)
+        {
+            var owner = await context.VehicleOwners.FindAsync(OwnerId);
+            if (owner == null)
+                return null;
+
+            // Update fields
+            owner.PhoneNumber = dto.PhoneNumber;
+            owner.Address = dto.Address;
+            owner.License = dto.License;
+
+            await context.SaveChangesAsync();
+            return owner;
+        }
 
     }
 }

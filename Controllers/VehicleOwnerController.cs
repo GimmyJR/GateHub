@@ -168,13 +168,11 @@ namespace GateHub.Controllers
                 return Unauthorized("User ID not found in token.");
             }
 
-            // Find the vehicle owner based on the AppUserId
             var owner = await vehicleOwnerRepo.GetVehicleOwner(userId);
 
             if (owner == null)
                 return NotFound("Vehicle owner not found.");
 
-            // Get all vehicle entries associated with the owner's vehicles
             var vehicleEntries = await vehicleOwnerRepo.GetVehicleOwnerEntries(owner);
 
             return Ok(vehicleEntries);

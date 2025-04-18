@@ -1,4 +1,5 @@
-﻿using GateHub.Models;
+﻿using GateHub.Dtos;
+using GateHub.Models;
 using Microsoft.EntityFrameworkCore;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -40,10 +41,10 @@ namespace GateHub.repository
             return owner;
         }
 
-        public async Task<List<VehicleEntry>> GetVehicleOwnerEntries(VehicleOwner owner)
+        public async Task<List<VehicleEntryDto>> GetVehicleOwnerEntries(VehicleOwner owner)
         {
             if (owner == null || owner.Vehicles == null || !owner.Vehicles.Any())
-                return new List<VehicleEntry>(); 
+                return new List<VehicleEntryDto>(); 
 
             var vehicleIds = owner.Vehicles.Select(v => v.Id).ToList();
 
@@ -54,7 +55,20 @@ namespace GateHub.repository
                 .Where(ve => ve.IsPaid == false)
                 .ToListAsync();
 
-            return vehicleEntries;
+            var result = vehicleEntries.Select(ve => new VehicleEntryDto
+            {
+                Id = ve.Id,
+                FeeValue = ve.FeeValue,
+                FineValue = (decimal)ve.FineValue,
+                FineType = ve.FineType,
+                Date = ve.Date,
+                IsPaid = ve.IsPaid,
+                VehicleId = ve.VehicleId,
+                GateId = ve.GateId,
+                GateName = ve.gate?.AddressName ?? "Unknown"
+            }).ToList();
+
+            return result;
         }
 
         public async Task<VehicleEntry> CheckVehicleEntry(int VehicleEntryId,VehicleOwner owner)
@@ -65,7 +79,7 @@ namespace GateHub.repository
 
             return vehicleEntry;
         }
-
+        
         public async Task AddObjection(Objection objection)
         {
             context.Objections.Add(objection);

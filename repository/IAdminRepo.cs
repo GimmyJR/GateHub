@@ -1,5 +1,6 @@
 ﻿using GateHub.Dtos;
 using GateHub.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace GateHub.repository
 {
@@ -22,6 +23,10 @@ namespace GateHub.repository
         public Task<List<DailyReportDto>> GetDailyReport();
         public Task<List<RecentCarDto>> GetRecentCars();
         public Task<List<GateTrafficDto>> GetTopGatesToday();
-
+        public Task<Objection> AcceptObjection(int id);
+        public Task<Objection> RejectObjection(int id);
+        public Task<List<LostVehicleAlertDto>> GetRecentLostVehicleAlerts();
+        public string GetTimeAgo(DateTime time);
+        public Task<VehicleOwner> UpdateVehicleOwner(int OwnerId, [FromBody] VehicleOwnerUpdateDto dto);
     }
 }
