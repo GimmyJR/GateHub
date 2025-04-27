@@ -4,6 +4,7 @@ using GateHub.Models;
 using GateHub.repository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text.Json.Serialization;
@@ -45,6 +46,7 @@ namespace GateHub
             builder.Services.AddScoped<IAdminRepo, AdminRepo>();
             builder.Services.AddScoped<IVehicleOwnerRepo, VehicleOwnerRepo>();
             builder.Services.AddScoped<IGateStaffRepo, GateStaffRepo>();
+            builder.Services.AddTransient<IEmailSender, EmailSender>();
             builder.Services.AddScoped<IGenerateTokenService, GenerateTokenService>();
             builder.Services.AddDbContext<GateHubContext>(options =>
             options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));

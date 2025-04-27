@@ -4,6 +4,7 @@ using GateHub.Models;
 using GateHub.repository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
@@ -25,8 +26,10 @@ namespace GateHub.Controllers
         private readonly IVehicleOwnerRepo vehicleOwnerRepo;
         private readonly PaymobService paymobService;
         private readonly IHubContext<NotificationHub> hubContext;
+        private readonly IEmailSender _emailSender;
 
-        public VehicleOwnerController(SignInManager<AppUser> signInManager,UserManager<AppUser> userManager,GateHubContext context,IGenerateTokenService generateTokenService,IVehicleOwnerRepo vehicleOwnerRepo,PaymobService paymobService,IHubContext<NotificationHub> hubContext)
+
+        public VehicleOwnerController(IEmailSender emailSender, SignInManager<AppUser> signInManager, UserManager<AppUser> userManager, GateHubContext context, IGenerateTokenService generateTokenService, IVehicleOwnerRepo vehicleOwnerRepo, PaymobService paymobService, IHubContext<NotificationHub> hubContext)
         {
             this.signInManager = signInManager;
             this.userManager = userManager;
@@ -35,6 +38,7 @@ namespace GateHub.Controllers
             this.vehicleOwnerRepo = vehicleOwnerRepo;
             this.paymobService = paymobService;
             this.hubContext = hubContext;
+            this._emailSender = emailSender;
         }
 
 
@@ -207,7 +211,7 @@ namespace GateHub.Controllers
 
 
             // Verify that the VehicleEntry exists and belongs to the owner
-            var vehicleEntry = await vehicleOwnerRepo.CheckVehicleEntry(dto.VehicleEntryId,owner);
+            var vehicleEntry = await vehicleOwnerRepo.CheckVehicleEntry(dto.VehicleEntryId, owner);
 
             if (vehicleEntry == null)
                 return NotFound("Vehicle entry not found or does not belong to this owner.");
@@ -250,7 +254,7 @@ namespace GateHub.Controllers
             if (owner == null)
                 return NotFound("Vehicle owner not found.");
 
-            var vehicleEntry = await vehicleOwnerRepo.CheckVehicleEntry(vehicleEntryId,owner);
+            var vehicleEntry = await vehicleOwnerRepo.CheckVehicleEntry(vehicleEntryId, owner);
 
             if (vehicleEntry == null)
                 return NotFound("Vehicle entry not found or does not belong to the owner.");
@@ -258,8 +262,8 @@ namespace GateHub.Controllers
             if (vehicleEntry.IsPaid)
                 return BadRequest("This entry has already been paid.");
 
-            string paymentUrl = await paymobService.InitiatePayment(owner, vehicleEntry.FeeValue +(vehicleEntry.FineValue ?? 0) , vehicleEntry.Id.ToString(), "Vehicle Entry Payment");
-            
+            string paymentUrl = await paymobService.InitiatePayment(owner, vehicleEntry.FeeValue + (vehicleEntry.FineValue ?? 0), vehicleEntry.Id.ToString(), "Vehicle Entry Payment");
+
             return Ok(new { message = "Redirect to this URL for payment", paymentUrl });
 
         }
@@ -436,7 +440,7 @@ namespace GateHub.Controllers
                 // **Check if the payment is for a balance recharge**
                 if (vehicleEntryIdsString == "Balance Recharge")
                 {
-                    string natId = data.Obj.PaymentKeyClaims.BillingData.Nat_Id; 
+                    string natId = data.Obj.PaymentKeyClaims.BillingData.Nat_Id;
                     var owner = await vehicleOwnerRepo.GetVehicleOwnerByNatId(natId);
 
                     if (owner == null)
@@ -540,8 +544,8 @@ namespace GateHub.Controllers
 
             if (dto.NewPassword != dto.ConfirmPassword)
                 return BadRequest("New password and confirmation do not match.");
-            
-           var result = await userManager.ChangePasswordAsync(user, dto.CurrentPassword, dto.NewPassword);
+
+            var result = await userManager.ChangePasswordAsync(user, dto.CurrentPassword, dto.NewPassword);
 
             if (!result.Succeeded)
             {
@@ -557,19 +561,94 @@ namespace GateHub.Controllers
         }
 
         [HttpGet("VehicleEntries")]
-        public async Task<IActionResult> VehicleEntries (int vehicleId)
+        public async Task<IActionResult> VehicleEntries(int vehicleId)
         {
-            if (vehicleId != null || vehicleId != 0 )
+            if (vehicleId != null || vehicleId != 0)
             {
                 var entries = await vehicleOwnerRepo.VehicleEntries(vehicleId);
                 if (entries == null)
                     return BadRequest("invalid vehicle ID");
-                
+
                 return Ok(entries);
             }
             return BadRequest("Un valid vehicle ID");
         }
 
 
+
+        // OTPHandle
+
+        [HttpPost("request-otp")]
+        public async Task<IActionResult> RequestOtp([FromBody] ForgetPasswordRequestDto model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var user = await userManager.FindByEmailAsync(model.Email);
+            if (user == null)
+            {
+                return BadRequest("User not found.");
+            }
+
+            var otp = new Random().Next(100000, 999999).ToString();
+            user.ResetPasswordOTP = otp;
+            user.ResetPasswordOTPExpiry = DateTime.UtcNow.AddMinutes(5);
+            user.IsResetPasswordOTPUsed = false;
+            await userManager.UpdateAsync(user);
+
+            await _emailSender.SendEmailAsync(user.Email, "Password Reset OTP", $"Your OTP for password reset is:  <strong>{otp}</strong>. It is valid for 5 minutes.");
+
+            return Ok("OTP has been sent to your email.");
+
+        }
+
+        [HttpPost("reset-password")]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordOTPDto model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+                
+            var user = await userManager.FindByEmailAsync(model.Email);
+            
+            if (user == null)
+            {
+                return BadRequest("User not found.");
+            }
+
+            if (user.ResetPasswordOTP != model.Otp)
+            {
+                return BadRequest("Invalid OTP.");
+            }
+
+            if (user.ResetPasswordOTPExpiry < DateTime.UtcNow)
+            {
+                return BadRequest("OTP has expired.");
+            }
+
+
+            if (user.IsResetPasswordOTPUsed == true)
+            {
+                return BadRequest("OTP has already been used.");
+            }
+            
+            var token = await  userManager.GeneratePasswordResetTokenAsync(user);
+            var result = await  userManager.ResetPasswordAsync(user, token, model.NewPassword);
+
+            if (!result.Succeeded)
+            {
+                return BadRequest(result.Errors);
+            }
+
+            // Mark the OTP as used
+            user.IsResetPasswordOTPUsed = true;
+            await userManager.UpdateAsync(user);
+
+            return Ok("Password has been reset successfully.");
+
+        }
     }
 }

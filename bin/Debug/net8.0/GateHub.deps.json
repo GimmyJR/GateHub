@@ -10,6 +10,7 @@
         "dependencies": {
           "Microsoft.AspNetCore.Authentication.JwtBearer": "8.0.13",
           "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "8.0.13",
+          "Microsoft.AspNetCore.Identity.UI": "9.0.4",
           "Microsoft.AspNetCore.SignalR": "1.2.0",
           "Microsoft.EntityFrameworkCore": "9.0.2",
           "Microsoft.EntityFrameworkCore.SqlServer": "9.0.2",
@@ -191,6 +192,7 @@
           }
         }
       },
+      "Microsoft.AspNetCore.Identity.UI/9.0.4": {},
       "Microsoft.AspNetCore.Routing/2.3.0": {
         "dependencies": {
           "Microsoft.AspNetCore.Http.Extensions": "2.3.0",
@@ -1488,6 +1490,13 @@
       "sha512": "sha512-phnM62PIcJcPF3c4tnUjmsIGAJGEEDhAarALxKFpKy9V4nwOVv/vPbgjRSt5ix3Zk03Z93TlQrBHWFDHLV4AHw==",
       "path": "microsoft.aspnetcore.identity.entityframeworkcore/8.0.13",
       "hashPath": "microsoft.aspnetcore.identity.entityframeworkcore.8.0.13.nupkg.sha512"
+    },
+    "Microsoft.AspNetCore.Identity.UI/9.0.4": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-+qdiW3QYoNQ2I0dDBfuoQUvOPg8r4NV+B9tN70zgqu2i5jV9KyBt4brzznDxNytDiGi2DhAMXBrDOaAMYe6c/A==",
+      "path": "microsoft.aspnetcore.identity.ui/9.0.4",
+      "hashPath": "microsoft.aspnetcore.identity.ui.9.0.4.nupkg.sha512"
     },
     "Microsoft.AspNetCore.Routing/2.3.0": {
       "type": "package",

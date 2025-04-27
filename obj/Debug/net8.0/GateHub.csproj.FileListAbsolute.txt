@@ -358,3 +358,4 @@ C:\Users\lenovo-\Desktop\grauation project\New folder\GateHub\obj\Debug\net8.0\r
 C:\Users\lenovo-\Desktop\grauation project\New folder\GateHub\obj\Debug\net8.0\GateHub.pdb
 C:\Users\lenovo-\Desktop\grauation project\New folder\GateHub\obj\Debug\net8.0\GateHub.genruntimeconfig.cache
 C:\Users\lenovo-\Desktop\grauation project\New folder\GateHub\obj\Debug\net8.0\ref\GateHub.dll
+C:\Users\lenovo-\Desktop\grauation project\New folder\GateHub\bin\Debug\net8.0\GateHub.staticwebassets.runtime.json
