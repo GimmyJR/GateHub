@@ -178,3 +178,12 @@ D:\Backend Material\Projects\dot net projects\GateHub\obj\Release\net8.0\refint\
 D:\Backend Material\Projects\dot net projects\GateHub\obj\Release\net8.0\GateHub.pdb
 D:\Backend Material\Projects\dot net projects\GateHub\obj\Release\net8.0\GateHub.genruntimeconfig.cache
 D:\Backend Material\Projects\dot net projects\GateHub\obj\Release\net8.0\ref\GateHub.dll
+D:\Backend Material\Projects\dot net projects\GateHub\bin\Release\net8.0\firebase-adminsdk.json
+D:\Backend Material\Projects\dot net projects\GateHub\bin\Release\net8.0\FirebaseAdmin.dll
+D:\Backend Material\Projects\dot net projects\GateHub\bin\Release\net8.0\Google.Api.Gax.dll
+D:\Backend Material\Projects\dot net projects\GateHub\bin\Release\net8.0\Google.Api.Gax.Rest.dll
+D:\Backend Material\Projects\dot net projects\GateHub\bin\Release\net8.0\Google.Apis.dll
+D:\Backend Material\Projects\dot net projects\GateHub\bin\Release\net8.0\Google.Apis.Auth.dll
+D:\Backend Material\Projects\dot net projects\GateHub\bin\Release\net8.0\Google.Apis.Core.dll
+D:\Backend Material\Projects\dot net projects\GateHub\bin\Release\net8.0\System.Management.dll
+D:\Backend Material\Projects\dot net projects\GateHub\bin\Release\net8.0\runtimes\win\lib\net7.0\System.Management.dll

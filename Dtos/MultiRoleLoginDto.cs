@@ -14,5 +14,6 @@ namespace GateHub.Dtos
         public string Password { get; set; }
 
         public bool RememberMe { get; set; }
+        public string? DeviceToken { get; set; }
     }
 }

@@ -48,9 +48,9 @@ namespace GateHub.repository
         {
             var notification = new Notification
             {
-                Statue = "Fine Issued",
-                Description = $"A fine of {dto.FineValue} for {dto.FineType} was issued for your vehicle with plate {dto.PlateNumber}.",
-                VehicleOwnerId = vehicle.VehicleOwnerId
+                Title = "Fine Issued",
+                Body = $"A fine of {dto.FineValue} for {dto.FineType} was issued for your vehicle with plate {dto.PlateNumber}.",
+                
             };
             context.Notifications.Add(notification);
 
@@ -63,7 +63,7 @@ namespace GateHub.repository
                     .SendAsync("ReceiveNotification", new
                     {
                         Title = "Fine Issued",
-                        Message = notification.Description,
+                        Message = notification.Body,
                         Date = DateTime.Now 
                     });
             }

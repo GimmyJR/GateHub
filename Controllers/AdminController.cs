@@ -58,6 +58,11 @@ namespace GateHub.Controllers
             {
                 return BadRequest(roleResult.Errors);
             }
+            if (!string.IsNullOrEmpty(dto.DeviceToken))
+            {
+                user.DeviceToken = dto.DeviceToken;
+                await userManager.UpdateAsync(user);
+            }
 
             return Ok(user);
         }
@@ -98,6 +103,12 @@ namespace GateHub.Controllers
             }
 
             var tokenString = generateTokenService.GenerateJwtTokenAsync(user);
+            if (!string.IsNullOrEmpty(dto.DeviceToken))
+            {
+                user.DeviceToken = dto.DeviceToken;
+                await userManager.UpdateAsync(user);
+            }
+
 
             return Ok(new { user, tokenString, role });
 

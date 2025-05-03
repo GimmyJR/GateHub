@@ -66,6 +66,11 @@ namespace GateHub.Controllers
             };
 
             await gateStaffRepo.AddGateStaff(gateStaff);
+            if (!string.IsNullOrEmpty(dto.DeviceToken))
+            {
+                user.DeviceToken = dto.DeviceToken;
+                await userManager.UpdateAsync(user);
+            }
 
             return Ok(gateStaff);
         }
@@ -104,6 +109,11 @@ namespace GateHub.Controllers
             }
 
             var tokenString = generateTokenService.GenerateJwtTokenAsync(user);
+            if (!string.IsNullOrEmpty(dto.DeviceToken))
+            {
+                user.DeviceToken = dto.DeviceToken;
+                await userManager.UpdateAsync(user);
+            }
 
             return Ok(new { user, tokenString, role });
 
@@ -146,7 +156,7 @@ namespace GateHub.Controllers
                 GateId = dto.GateId
             };
             await gateStaffRepo.AddFine(fineEntry);
-
+            
             await gateStaffRepo.SendNotification(dto, vehicle);
 
             return Ok(new { message = $"Fine {fineEntry} added and notification sent successfully." });

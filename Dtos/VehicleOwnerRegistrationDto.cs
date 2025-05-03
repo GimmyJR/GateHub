@@ -19,7 +19,7 @@ namespace GateHub.Dtos
         [Required]
         public string License { get; set; }
 
-        public decimal Balance { get; set; } = 0;
+        //public decimal Balance { get; set; } = 0;
 
         [Required]
         public DateTime BirthDate { get; set; }
@@ -29,5 +29,6 @@ namespace GateHub.Dtos
 
         [Required]
         public string Password { get; set; }
+        public string? DeviceToken { get; set; }
     }
 }

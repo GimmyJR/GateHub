@@ -16,6 +16,6 @@ namespace GateHub.Models
         public string? ResetPasswordOTP { get; set; }
         public DateTime? ResetPasswordOTPExpiry { get; set; }
         public bool? IsResetPasswordOTPUsed { get; set; }
-
+        public string? DeviceToken { get; set; } 
     }
 }

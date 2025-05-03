@@ -26,10 +26,11 @@ namespace GateHub.Controllers
         private readonly IVehicleOwnerRepo vehicleOwnerRepo;
         private readonly PaymobService paymobService;
         private readonly IHubContext<NotificationHub> hubContext;
+        private readonly FirebaseNotificationService firebaseNotificationService;
         private readonly IEmailSender _emailSender;
 
 
-        public VehicleOwnerController(IEmailSender emailSender, SignInManager<AppUser> signInManager, UserManager<AppUser> userManager, GateHubContext context, IGenerateTokenService generateTokenService, IVehicleOwnerRepo vehicleOwnerRepo, PaymobService paymobService, IHubContext<NotificationHub> hubContext)
+        public VehicleOwnerController(IEmailSender emailSender, SignInManager<AppUser> signInManager, UserManager<AppUser> userManager, GateHubContext context, IGenerateTokenService generateTokenService, IVehicleOwnerRepo vehicleOwnerRepo, PaymobService paymobService, IHubContext<NotificationHub> hubContext,FirebaseNotificationService firebaseNotificationService)
         {
             this.signInManager = signInManager;
             this.userManager = userManager;
@@ -38,6 +39,7 @@ namespace GateHub.Controllers
             this.vehicleOwnerRepo = vehicleOwnerRepo;
             this.paymobService = paymobService;
             this.hubContext = hubContext;
+            this.firebaseNotificationService = firebaseNotificationService;
             this._emailSender = emailSender;
         }
 
@@ -74,12 +76,17 @@ namespace GateHub.Controllers
                 PhoneNumber = dto.PhoneNumber,
                 Address = dto.Address,
                 License = dto.License,
-                Balance = dto.Balance,
+                Balance = 0,
                 AppUserId = user.Id,
                 appUser = user
             };
 
             await vehicleOwnerRepo.AddVehicleOwner(vehicleOwner);
+            if (!string.IsNullOrEmpty(dto.DeviceToken))
+            {
+                user.DeviceToken = dto.DeviceToken;
+                await userManager.UpdateAsync(user);
+            }
 
             return Ok(vehicleOwner);
         }
@@ -113,6 +120,11 @@ namespace GateHub.Controllers
 
 
             var tokenString = generateTokenService.GenerateJwtTokenAsync(user);
+            if (!string.IsNullOrEmpty(dto.DeviceToken))
+            {
+                user.DeviceToken = dto.DeviceToken;
+                await userManager.UpdateAsync(user);
+            }
 
             return Ok(new { user, tokenString });
 
@@ -173,7 +185,7 @@ namespace GateHub.Controllers
             }
 
             var owner = await vehicleOwnerRepo.GetVehicleOwner(userId);
-
+            
             if (owner == null)
                 return NotFound("Vehicle owner not found.");
 
@@ -226,6 +238,22 @@ namespace GateHub.Controllers
             };
 
             await vehicleOwnerRepo.AddObjection(objection);
+
+            //notify
+            var user = await userManager.FindByIdAsync(userId);
+            var deviceToken = user?.DeviceToken;
+
+            await firebaseNotificationService.StoreNotification(userId, "Objection Submitted",
+                "Your objection has been submitted and is under review");
+
+            //if (!string.IsNullOrEmpty(deviceToken))
+            //{
+            await firebaseNotificationService.SendNotificationAsync(
+                "Objection Submitted",
+                "Your objection has been submitted and is under review",
+                "eMNyZjYgXiXYtw8isgK7qO:APA91bEItoXPrGe4LsuOVTZ9_cqBasmkworN7MEx6z-f5JAfJxVtoj6whGPysirV6az2O7MxnSrRQS-K8VD5W-02tQ5BuNpnq3XNFLNoIU1SPj7GIQ8v0OI"
+            );
+            //}
 
             return Ok(new { message = "Objection submitted successfully.", objection });
         }
@@ -574,8 +602,6 @@ namespace GateHub.Controllers
             return BadRequest("Un valid vehicle ID");
         }
 
-
-
         // OTPHandle
 
         [HttpPost("request-otp")]
@@ -650,5 +676,28 @@ namespace GateHub.Controllers
             return Ok("Password has been reset successfully.");
 
         }
+        [HttpGet("GetNotifications")]
+        public async Task<IActionResult> GetNotifications()
+        {
+            var token = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+
+            if (string.IsNullOrEmpty(token)) return null;
+
+            var handler = new JwtSecurityTokenHandler();
+            var jwtToken = handler.ReadToken(token) as JwtSecurityToken;
+
+            var userId = jwtToken?.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.NameIdentifier)?.Value;
+
+            if (string.IsNullOrEmpty(userId))
+                return Unauthorized("User ID not found in token.");
+
+            var notifications = await context.Notifications
+                .Where(n => n.UserId == userId)
+                .OrderByDescending(n => n.CreatedAt)
+                .ToListAsync();
+
+            return Ok(notifications);
+        }
+
     }
 }

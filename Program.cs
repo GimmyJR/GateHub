@@ -1,7 +1,9 @@
 
+using FirebaseAdmin;
 using GateHub.Hubs;
 using GateHub.Models;
 using GateHub.repository;
+using Google.Apis.Auth.OAuth2;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
@@ -25,10 +27,13 @@ namespace GateHub
             //});
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+            
             builder.Services.AddIdentity<AppUser, IdentityRole>()
             .AddEntityFrameworkStores<GateHubContext>()
             .AddDefaultTokenProviders();
+            
             builder.Services.AddSignalR();
+            
             builder.Services.AddCors(options =>
             {
                 options.AddPolicy("AllowAll",
@@ -43,14 +48,19 @@ namespace GateHub
                         .AllowAnyMethod();
                     });
             });
+
             builder.Services.AddScoped<IAdminRepo, AdminRepo>();
             builder.Services.AddScoped<IVehicleOwnerRepo, VehicleOwnerRepo>();
             builder.Services.AddScoped<IGateStaffRepo, GateStaffRepo>();
             builder.Services.AddTransient<IEmailSender, EmailSender>();
             builder.Services.AddScoped<IGenerateTokenService, GenerateTokenService>();
+            builder.Services.AddScoped<FirebaseNotificationService>();
+
             builder.Services.AddDbContext<GateHubContext>(options =>
             options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+            
             builder.Services.AddHttpClient<PaymobService>();
+            
             builder.Services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -70,7 +80,16 @@ namespace GateHub
                     ClockSkew = TimeSpan.Zero
                 };
             });
+            
             builder.Services.AddAuthorization();
+
+            var firebaseCredentialPath = Path.Combine(AppContext.BaseDirectory, "firebase-adminsdk.json");
+
+            FirebaseApp.Create(new AppOptions
+            {
+                Credential = GoogleCredential.FromFile(firebaseCredentialPath)
+            });
+
 
             var app = builder.Build();
 
