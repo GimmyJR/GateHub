@@ -699,5 +699,19 @@ namespace GateHub.Controllers
             return Ok(notifications);
         }
 
+        [HttpGet("vehicle-entry/{id}")]
+        public async Task<IActionResult> GetVehicleEntryById(int id)
+        {
+            var vehicleEntry = await vehicleOwnerRepo.FindVehicleEntry(id);
+
+            if (vehicleEntry == null)
+            {
+                return NotFound($"Vehicle entry with ID {id} not found.");
+            }
+
+            return Ok(vehicleEntry);
+        }
+
+
     }
 }
