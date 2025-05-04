@@ -4,6 +4,7 @@ namespace GateHub.Dtos
 {
     public class AllObjectionsDTO
     {
+        public int id { get; set; }
         public string Statue { get; set; }
         public DateTime date { get; set; }
         public string Description { get; set; }

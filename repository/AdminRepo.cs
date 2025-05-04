@@ -381,6 +381,7 @@ namespace GateHub.repository
                    .ThenInclude(v => v.vehicle)
                 .Select(o => new AllObjectionsDTO
                 {
+                    id = o.Id,
                     date = o.date,
                     Statue = o.Statue,
                     Description = o.Description,
