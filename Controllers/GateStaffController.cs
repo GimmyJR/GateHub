@@ -126,7 +126,7 @@ namespace GateHub.Controllers
             await signInManager.SignOutAsync();
             return Ok("logout successful");
         }
-
+ 
         [HttpPost("AddFine")]
         public async Task<IActionResult> AddFine([FromBody] FineCreationDto dto)
         {
@@ -165,3 +165,5 @@ namespace GateHub.Controllers
 
     }
 }
+
+

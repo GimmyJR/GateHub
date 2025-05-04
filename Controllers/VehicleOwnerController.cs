@@ -676,6 +676,8 @@ namespace GateHub.Controllers
             return Ok("Password has been reset successfully.");
 
         }
+       
+        
         [HttpGet("GetNotifications")]
         public async Task<IActionResult> GetNotifications()
         {

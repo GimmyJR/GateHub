@@ -369,3 +369,12 @@ D:\Backend Material\Projects\dot net projects\GateHub\bin\Debug\net8.0\Google.Ap
 D:\Backend Material\Projects\dot net projects\GateHub\bin\Debug\net8.0\Google.Apis.Core.dll
 D:\Backend Material\Projects\dot net projects\GateHub\bin\Debug\net8.0\System.Management.dll
 D:\Backend Material\Projects\dot net projects\GateHub\bin\Debug\net8.0\runtimes\win\lib\net7.0\System.Management.dll
+C:\Users\lenovo-\Desktop\grauation project\New folder\GateHub\bin\Debug\net8.0\firebase-adminsdk.json
+C:\Users\lenovo-\Desktop\grauation project\New folder\GateHub\bin\Debug\net8.0\FirebaseAdmin.dll
+C:\Users\lenovo-\Desktop\grauation project\New folder\GateHub\bin\Debug\net8.0\Google.Api.Gax.dll
+C:\Users\lenovo-\Desktop\grauation project\New folder\GateHub\bin\Debug\net8.0\Google.Api.Gax.Rest.dll
+C:\Users\lenovo-\Desktop\grauation project\New folder\GateHub\bin\Debug\net8.0\Google.Apis.dll
+C:\Users\lenovo-\Desktop\grauation project\New folder\GateHub\bin\Debug\net8.0\Google.Apis.Auth.dll
+C:\Users\lenovo-\Desktop\grauation project\New folder\GateHub\bin\Debug\net8.0\Google.Apis.Core.dll
+C:\Users\lenovo-\Desktop\grauation project\New folder\GateHub\bin\Debug\net8.0\System.Management.dll
+C:\Users\lenovo-\Desktop\grauation project\New folder\GateHub\bin\Debug\net8.0\runtimes\win\lib\net7.0\System.Management.dll
