@@ -156,8 +156,6 @@ namespace GateHub.Controllers
                 GateId = dto.GateId
             };
             await gateStaffRepo.AddFine(fineEntry);
-            
-            await gateStaffRepo.SendNotification(dto, vehicle);
 
             return Ok(new { message = $"Fine {fineEntry} added and notification sent successfully." });
         }

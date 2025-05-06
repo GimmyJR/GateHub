@@ -187,3 +187,4 @@ D:\Backend Material\Projects\dot net projects\GateHub\bin\Release\net8.0\Google.
 D:\Backend Material\Projects\dot net projects\GateHub\bin\Release\net8.0\Google.Apis.Core.dll
 D:\Backend Material\Projects\dot net projects\GateHub\bin\Release\net8.0\System.Management.dll
 D:\Backend Material\Projects\dot net projects\GateHub\bin\Release\net8.0\runtimes\win\lib\net7.0\System.Management.dll
+D:\Backend Material\Projects\dot net projects\GateHub\bin\Release\net8.0\GateHub.staticwebassets.runtime.json

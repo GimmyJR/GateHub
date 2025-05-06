@@ -16,7 +16,7 @@ namespace GateHub.repository
         public Task<VehicleOwnerWithVehiclesDto> GetOwnerWithVehiclesByNatId(string natId);
         public Task<LostVehicle> GetLostVehicleByPlate(string plateNumber);
         public Task<List<LostVehicle>> GetAllLostVehicles();
-        public Task RecoverVehicle(RecoverVehicleDTO dto);
+        public Task<bool> RecoverVehicle(RecoverVehicleDTO dto);
         public  Task<DailyVehicleEntryCountDto> VehicleCount();
         public Task<MonthlyPaymentSummaryDto> TotalRevenue();
         public Task<int> GetLostVehicleCount();

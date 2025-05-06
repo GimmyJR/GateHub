@@ -54,6 +54,8 @@ namespace GateHub
             builder.Services.AddScoped<IGateStaffRepo, GateStaffRepo>();
             builder.Services.AddTransient<IEmailSender, EmailSender>();
             builder.Services.AddScoped<IGenerateTokenService, GenerateTokenService>();
+            builder.Services.AddScoped<ISystemFeatures, SystemFeatures>() ;
+
             builder.Services.AddScoped<FirebaseNotificationService>();
 
             builder.Services.AddDbContext<GateHubContext>(options =>

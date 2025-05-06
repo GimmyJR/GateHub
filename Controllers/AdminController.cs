@@ -207,10 +207,8 @@ namespace GateHub.Controllers
             {
                 return BadRequest(ModelState);  
             }
-
-            await   adminRepo.RecoverVehicle(dto);
-            return Ok(dto);
-
+            var res = await adminRepo.RecoverVehicle(dto);
+            return Ok(res);
         }
 
         

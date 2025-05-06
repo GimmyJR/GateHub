@@ -44,33 +44,10 @@ namespace GateHub.repository
 
             return gateFee;
         }
-        public async Task SendNotification(FineCreationDto dto,Vehicle vehicle)
-        {
-            var notification = new Notification
-            {
-                Title = "Fine Issued",
-                Body = $"A fine of {dto.FineValue} for {dto.FineType} was issued for your vehicle with plate {dto.PlateNumber}.",
-                
-            };
-            context.Notifications.Add(notification);
-
-            await context.SaveChangesAsync();
-
-            // Send real-time notification via SignalR if the VehicleOwner has an AppUserId.
-            if (vehicle.VehicleOwner != null && !string.IsNullOrEmpty(vehicle.VehicleOwner.AppUserId))
-            {
-                await hubContext.Clients.User(vehicle.VehicleOwner.AppUserId)
-                    .SendAsync("ReceiveNotification", new
-                    {
-                        Title = "Fine Issued",
-                        Message = notification.Body,
-                        Date = DateTime.Now 
-                    });
-            }
-        }
         public async Task AddFine(VehicleEntry fineEntry)
         {
             context.VehicleEntries.Add(fineEntry);
+            await context.SaveChangesAsync();
         }
     }
 }

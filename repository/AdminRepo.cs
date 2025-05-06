@@ -173,19 +173,19 @@ namespace GateHub.repository
             return lostVehicles;
         }
 
-        public async Task RecoverVehicle (RecoverVehicleDTO dto)
+        public async Task<bool> RecoverVehicle (RecoverVehicleDTO dto)
         {
             var lostVehicle = await context.LostVehicles.FirstOrDefaultAsync(v => v.PlateNumber == dto.PlateNum);
             if (lostVehicle == null)
             {
-                return;
+                return false;
             }
             else
             {
                 lostVehicle.IsFound = true;
             }
-
             await context.SaveChangesAsync();
+            return true;
         }
         public async Task<DailyVehicleEntryCountDto> VehicleCount ()
         {
