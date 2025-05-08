@@ -7,28 +7,30 @@
       "RelativeMoniker": "D:0:0:{86A19443-E36E-42EC-AA0B-BC18F137AC58}|GateHub.csproj|solutionrelative:controllers\\systemcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{86A19443-E36E-42EC-AA0B-BC18F137AC58}|GateHub.csproj|d:\\backend material\\projects\\dot net projects\\gatehub\\controllers\\vehicleownercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{86A19443-E36E-42EC-AA0B-BC18F137AC58}|GateHub.csproj|solutionrelative:controllers\\vehicleownercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{86A19443-E36E-42EC-AA0B-BC18F137AC58}|GateHub.csproj|d:\\backend material\\projects\\dot net projects\\gatehub\\repository\\systemfeatures.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{86A19443-E36E-42EC-AA0B-BC18F137AC58}|GateHub.csproj|solutionrelative:repository\\systemfeatures.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{86A19443-E36E-42EC-AA0B-BC18F137AC58}|GateHub.csproj|d:\\backend material\\projects\\dot net projects\\gatehub\\repository\\gatestaffrepo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{86A19443-E36E-42EC-AA0B-BC18F137AC58}|GateHub.csproj|solutionrelative:repository\\gatestaffrepo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{86A19443-E36E-42EC-AA0B-BC18F137AC58}|GateHub.csproj|d:\\backend material\\projects\\dot net projects\\gatehub\\firebase-adminsdk.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{86A19443-E36E-42EC-AA0B-BC18F137AC58}|GateHub.csproj|solutionrelative:firebase-adminsdk.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\Backend Material\\Projects\\dot net projects\\GateHub\\obj\\Release\\net8.0\\GateHub.AssemblyInfo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:obj\\Release\\net8.0\\GateHub.AssemblyInfo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{86A19443-E36E-42EC-AA0B-BC18F137AC58}|GateHub.csproj|d:\\backend material\\projects\\dot net projects\\gatehub\\repository\\igatestaffrepo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{86A19443-E36E-42EC-AA0B-BC18F137AC58}|GateHub.csproj|solutionrelative:repository\\igatestaffrepo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\ELSERAG\\Downloads\\gatehub-c9158-firebase-adminsdk-fbsvc-cf19c12e60.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{86A19443-E36E-42EC-AA0B-BC18F137AC58}|GateHub.csproj|d:\\backend material\\projects\\dot net projects\\gatehub\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{86A19443-E36E-42EC-AA0B-BC18F137AC58}|GateHub.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{86A19443-E36E-42EC-AA0B-BC18F137AC58}|GateHub.csproj|d:\\backend material\\projects\\dot net projects\\gatehub\\dtos\\vehiclevalidationdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{86A19443-E36E-42EC-AA0B-BC18F137AC58}|GateHub.csproj|solutionrelative:dtos\\vehiclevalidationdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{86A19443-E36E-42EC-AA0B-BC18F137AC58}|GateHub.csproj|d:\\backend material\\projects\\dot net projects\\gatehub\\hubs\\vehiclehub.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{86A19443-E36E-42EC-AA0B-BC18F137AC58}|GateHub.csproj|solutionrelative:hubs\\vehiclehub.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\ELSERAG\\AppData\\Local\\Packages\\28017CharlesMilette.TranslucentTB_v826wp6bftszj\\RoamingState\\settings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     }
   ],
   "DocumentGroupContainers": [
@@ -58,41 +60,39 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "GateStaffRepo.cs",
-              "DocumentMoniker": "D:\\Backend Material\\Projects\\dot net projects\\GateHub\\repository\\GateStaffRepo.cs",
-              "RelativeDocumentMoniker": "repository\\GateStaffRepo.cs",
-              "ToolTip": "D:\\Backend Material\\Projects\\dot net projects\\GateHub\\repository\\GateStaffRepo.cs",
-              "RelativeToolTip": "repository\\GateStaffRepo.cs",
-              "ViewState": "AQIAABIAAAAAAAAAAAAAAC4AAAA5AAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-06T03:02:41.8Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
               "DocumentIndex": 3,
-              "Title": "GateHub.AssemblyInfo.cs",
-              "DocumentMoniker": "D:\\Backend Material\\Projects\\dot net projects\\GateHub\\obj\\Release\\net8.0\\GateHub.AssemblyInfo.cs",
-              "RelativeDocumentMoniker": "obj\\Release\\net8.0\\GateHub.AssemblyInfo.cs",
-              "ToolTip": "D:\\Backend Material\\Projects\\dot net projects\\GateHub\\obj\\Release\\net8.0\\GateHub.AssemblyInfo.cs",
-              "RelativeToolTip": "obj\\Release\\net8.0\\GateHub.AssemblyInfo.cs",
-              "ViewState": "AQIAAAEAAAAAAAAAAAApwA0AAABBAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-06T02:28:25.199Z",
+              "Title": "firebase-adminsdk.json",
+              "DocumentMoniker": "D:\\Backend Material\\Projects\\dot net projects\\GateHub\\firebase-adminsdk.json",
+              "RelativeDocumentMoniker": "firebase-adminsdk.json",
+              "ToolTip": "D:\\Backend Material\\Projects\\dot net projects\\GateHub\\firebase-adminsdk.json",
+              "RelativeToolTip": "firebase-adminsdk.json",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA0AAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-05-08T01:15:37.05Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 4,
-              "Title": "IGateStaffRepo.cs",
-              "DocumentMoniker": "D:\\Backend Material\\Projects\\dot net projects\\GateHub\\repository\\IGateStaffRepo.cs",
-              "RelativeDocumentMoniker": "repository\\IGateStaffRepo.cs",
-              "ToolTip": "D:\\Backend Material\\Projects\\dot net projects\\GateHub\\repository\\IGateStaffRepo.cs",
-              "RelativeToolTip": "repository\\IGateStaffRepo.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAkAAABfAAAA",
+              "Title": "gatehub-c9158-firebase-adminsdk-fbsvc-cf19c12e60.json",
+              "DocumentMoniker": "C:\\Users\\ELSERAG\\Downloads\\gatehub-c9158-firebase-adminsdk-fbsvc-cf19c12e60.json",
+              "ToolTip": "C:\\Users\\ELSERAG\\Downloads\\gatehub-c9158-firebase-adminsdk-fbsvc-cf19c12e60.json",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA0AAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-05-08T01:15:14.963Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "VehicleOwnerController.cs",
+              "DocumentMoniker": "D:\\Backend Material\\Projects\\dot net projects\\GateHub\\Controllers\\VehicleOwnerController.cs",
+              "RelativeDocumentMoniker": "Controllers\\VehicleOwnerController.cs",
+              "ToolTip": "D:\\Backend Material\\Projects\\dot net projects\\GateHub\\Controllers\\VehicleOwnerController.cs",
+              "RelativeToolTip": "Controllers\\VehicleOwnerController.cs",
+              "ViewState": "AQIAAMMAAAAAAAAAAAAuwMYAAAAIAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-06T02:26:46.67Z",
+              "WhenOpened": "2025-05-08T00:34:20.198Z",
               "EditorCaption": ""
             },
             {
@@ -103,21 +103,22 @@
               "RelativeDocumentMoniker": "Program.cs",
               "ToolTip": "D:\\Backend Material\\Projects\\dot net projects\\GateHub\\Program.cs",
               "RelativeToolTip": "Program.cs",
-              "ViewState": "AQIAAC4AAAAAAAAAAAAQwDgAAABJAAAA",
+              "ViewState": "AQIAAE0AAAAAAAAAAAAAAGgAAAAkAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-06T02:18:42.114Z"
+              "WhenOpened": "2025-05-07T23:27:15.642Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "SystemFeatures.cs",
-              "DocumentMoniker": "D:\\Backend Material\\Projects\\dot net projects\\GateHub\\repository\\SystemFeatures.cs",
-              "RelativeDocumentMoniker": "repository\\SystemFeatures.cs",
-              "ToolTip": "D:\\Backend Material\\Projects\\dot net projects\\GateHub\\repository\\SystemFeatures.cs",
-              "RelativeToolTip": "repository\\SystemFeatures.cs",
-              "ViewState": "AQIAAAkAAAAAAAAAAAAowBcAAAA5AAAA",
+              "DocumentIndex": 6,
+              "Title": "VehicleHub.cs",
+              "DocumentMoniker": "D:\\Backend Material\\Projects\\dot net projects\\GateHub\\Hubs\\VehicleHub.cs",
+              "RelativeDocumentMoniker": "Hubs\\VehicleHub.cs",
+              "ToolTip": "D:\\Backend Material\\Projects\\dot net projects\\GateHub\\Hubs\\VehicleHub.cs",
+              "RelativeToolTip": "Hubs\\VehicleHub.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAsAAAAJAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-06T01:38:46.195Z",
+              "WhenOpened": "2025-05-07T23:25:59.819Z",
               "EditorCaption": ""
             },
             {
@@ -128,22 +129,33 @@
               "RelativeDocumentMoniker": "Controllers\\SystemController.cs",
               "ToolTip": "D:\\Backend Material\\Projects\\dot net projects\\GateHub\\Controllers\\SystemController.cs",
               "RelativeToolTip": "Controllers\\SystemController.cs",
-              "ViewState": "AQIAABMAAAAAAAAAAAAQwBcAAAAIAAAA",
+              "ViewState": "AQIAAC8AAAAAAAAAAAAiwB8AAABDAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-06T01:37:31.754Z",
+              "WhenOpened": "2025-05-07T23:17:00.008Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "VehicleValidationDto.cs",
-              "DocumentMoniker": "D:\\Backend Material\\Projects\\dot net projects\\GateHub\\Dtos\\VehicleValidationDto.cs",
-              "RelativeDocumentMoniker": "Dtos\\VehicleValidationDto.cs",
-              "ToolTip": "D:\\Backend Material\\Projects\\dot net projects\\GateHub\\Dtos\\VehicleValidationDto.cs",
-              "RelativeToolTip": "Dtos\\VehicleValidationDto.cs",
-              "ViewState": "AQIAAAEAAAAAAAAAAAAAAAYAAAAnAAAA",
+              "DocumentIndex": 2,
+              "Title": "SystemFeatures.cs",
+              "DocumentMoniker": "D:\\Backend Material\\Projects\\dot net projects\\GateHub\\repository\\SystemFeatures.cs",
+              "RelativeDocumentMoniker": "repository\\SystemFeatures.cs",
+              "ToolTip": "D:\\Backend Material\\Projects\\dot net projects\\GateHub\\repository\\SystemFeatures.cs",
+              "RelativeToolTip": "repository\\SystemFeatures.cs",
+              "ViewState": "AQIAABIAAAAAAAAAAAAqwCUAAABPAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-06T01:35:55.716Z",
+              "WhenOpened": "2025-05-07T23:16:20.207Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "settings.json",
+              "DocumentMoniker": "C:\\Users\\ELSERAG\\AppData\\Local\\Packages\\28017CharlesMilette.TranslucentTB_v826wp6bftszj\\RoamingState\\settings.json",
+              "ToolTip": "C:\\Users\\ELSERAG\\AppData\\Local\\Packages\\28017CharlesMilette.TranslucentTB_v826wp6bftszj\\RoamingState\\settings.json",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-05-07T23:10:33.286Z",
               "EditorCaption": ""
             }
           ]

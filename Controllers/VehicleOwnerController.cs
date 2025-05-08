@@ -251,7 +251,7 @@ namespace GateHub.Controllers
             await firebaseNotificationService.SendNotificationAsync(
                 "Objection Submitted",
                 "Your objection has been submitted and is under review",
-                "cd8i4jVlAcWBz9LSZFedhT:APA91bG7Dv2mSZQRV_p2rJ0-meK_JpVB7UDo8SIMEsyVwwBmspx7YfXpk_PMTHbymhOXzDLARA_OnlPh_KVZPWkv6-046Tjw1ftUP56Y-dutaSYPlTdGb7U"
+                deviceToken
             );
             //}
 

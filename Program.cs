@@ -106,9 +106,10 @@ namespace GateHub
             app.UseAuthentication();
             app.UseWebSockets();
             app.UseAuthorization();
-            
-            app.MapHub<NotificationHub>("/notificationHub");
 
+            app.MapHub<NotificationHub>("/notificationHub");
+            app.MapHub<VehicleHub>("/vehicleHub");
+             
             app.MapControllers();
 
             app.Run();

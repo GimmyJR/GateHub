@@ -235,7 +235,7 @@ namespace GateHub.repository
                 {
                     Hour = g.Key,
                     Cars = g.Count(),
-                    Revenue = g.Where(x => x.IsPaid).Sum(x => x.FeeValue),
+                    Revenue = (decimal)(g.Where(x => x.IsPaid).Sum(x => x.FeeValue)+ g.Where(x => x.IsPaid).Sum(x => x.FineValue)),
                 })
                 .ToListAsync();
 

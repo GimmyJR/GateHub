@@ -38,7 +38,7 @@ namespace GateHub.repository
         public async Task<Vehicle> FindVehicleByPlateNumber(string PlateNumber)
         {
             var vehicle = await _context.Vehicles
-                .Include(v => v.VehicleOwner)
+                .Include(v => v.VehicleOwner).ThenInclude(v => v.appUser)
                 .FirstOrDefaultAsync(v => v.PlateNumber.ToLower() == PlateNumber.ToLower());
 
             return vehicle;
