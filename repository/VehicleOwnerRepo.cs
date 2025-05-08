@@ -21,12 +21,26 @@ namespace GateHub.repository
             await context.SaveChangesAsync();
         }
 
-        public async Task<VehicleOwner> VOProfile(string userId)
+        public async Task<VehicleOwnerWithAllDetailsDTO> VOProfile(string userId)
         {
             var owner = await context.VehicleOwners
-                .Include(vo => vo.Vehicles)
-                .Include(vo => vo.Transactions)
-                .FirstOrDefaultAsync(vo => vo.AppUserId == userId);
+               .Where(vo => vo.AppUserId == userId)
+               .Select(vo => new VehicleOwnerWithAllDetailsDTO
+               {
+                   Id = vo.Id,
+                   FullName = vo.appUser.Name,
+                   UserName = vo.appUser.UserName,
+                   NatId = vo.appUser.NatId,
+                   Gender = vo.appUser.Gender,
+                   BirthDate = vo.appUser.BirthDate,
+                   PhoneNumber = vo.PhoneNumber,
+                   Address = vo.Address,
+                   License = vo.License,
+                   Balance = vo.Balance,
+                   Vehicles = vo.Vehicles,
+                   Transactions = vo.Transactions
+               })
+                    .FirstOrDefaultAsync();
 
             return owner;
         }
