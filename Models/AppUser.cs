@@ -12,7 +12,6 @@ namespace GateHub.Models
         
         [Required, DataType(DataType.Date)]
         public DateTime BirthDate { get; set; }
-
         public string? ResetPasswordOTP { get; set; }
         public DateTime? ResetPasswordOTPExpiry { get; set; }
         public bool? IsResetPasswordOTPUsed { get; set; }

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace GateHub.Controllers
 {
@@ -21,8 +22,9 @@ namespace GateHub.Controllers
         private readonly IAdminRepo adminRepo;
         private readonly IGenerateTokenService generateTokenService;
         private readonly GateHubContext context;
+        private readonly ITokenBlacklistService blacklistService;
 
-        public AdminController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, IConfiguration configuration, IAdminRepo adminRepo, IGenerateTokenService generateTokenService, GateHubContext context)
+        public AdminController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, IConfiguration configuration, IAdminRepo adminRepo, IGenerateTokenService generateTokenService, GateHubContext context,ITokenBlacklistService blacklistService)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
@@ -30,6 +32,7 @@ namespace GateHub.Controllers
             this.adminRepo = adminRepo;
             this.generateTokenService = generateTokenService;
             this.context = context;
+            this.blacklistService = blacklistService;
         }
 
         [HttpPost("register-admin")]
@@ -118,8 +121,14 @@ namespace GateHub.Controllers
         [HttpPost("logout")]
         public async Task<IActionResult> Logout()
         {
-            await signInManager.SignOutAsync();
-            return Ok("logout successful");
+            var rawToken = HttpContext.Request.Headers["Authorization"]
+                .ToString()
+                .Replace("Bearer ", "");
+            var handler = new JwtSecurityTokenHandler();
+            var jwtToken = handler.ReadJwtToken(rawToken);
+
+            await blacklistService.BlacklistToken(rawToken, jwtToken.ValidTo);
+            return Ok("Logged out successfully");
         }
 
         

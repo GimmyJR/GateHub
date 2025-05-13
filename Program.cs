@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
 using System.Text.Json.Serialization;
 
 namespace GateHub
@@ -55,7 +56,7 @@ namespace GateHub
             builder.Services.AddTransient<IEmailSender, EmailSender>();
             builder.Services.AddScoped<IGenerateTokenService, GenerateTokenService>();
             builder.Services.AddScoped<ISystemFeatures, SystemFeatures>() ;
-
+            builder.Services.AddScoped<ITokenBlacklistService, TokenBlacklistService>();
             builder.Services.AddScoped<FirebaseNotificationService>();
 
             builder.Services.AddDbContext<GateHubContext>(options =>
@@ -80,6 +81,25 @@ namespace GateHub
                     ValidIssuer = builder.Configuration["JWT:ValidIssuer"],
                     ValidAudience = builder.Configuration["JWT:ValidAudience"],
                     ClockSkew = TimeSpan.Zero
+                };
+                options.Events = new JwtBearerEvents
+                {
+                    OnTokenValidated = async context =>
+                    {
+                        var blacklist = context.HttpContext.RequestServices.GetRequiredService<ITokenBlacklistService>();
+                        if(context.SecurityToken is JwtSecurityToken jwtToken)
+                        {
+                            var rawToken = context.Request.Headers["Authorization"]
+                                .ToString()
+                                .Replace("Bearer ", "");
+
+                            if (await blacklist.IsTokenBlacklisted(rawToken))
+                            {
+                                context.Fail("Token revoked");
+                            }
+                        }
+
+                    }
                 };
             });
             

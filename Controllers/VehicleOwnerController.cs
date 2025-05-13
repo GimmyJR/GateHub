@@ -2,6 +2,7 @@
 using GateHub.Hubs;
 using GateHub.Models;
 using GateHub.repository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
@@ -27,10 +28,11 @@ namespace GateHub.Controllers
         private readonly PaymobService paymobService;
         private readonly IHubContext<NotificationHub> hubContext;
         private readonly FirebaseNotificationService firebaseNotificationService;
+        private readonly ITokenBlacklistService blacklistService;
         private readonly IEmailSender _emailSender;
 
 
-        public VehicleOwnerController(IEmailSender emailSender, SignInManager<AppUser> signInManager, UserManager<AppUser> userManager, GateHubContext context, IGenerateTokenService generateTokenService, IVehicleOwnerRepo vehicleOwnerRepo, PaymobService paymobService, IHubContext<NotificationHub> hubContext,FirebaseNotificationService firebaseNotificationService)
+        public VehicleOwnerController(IEmailSender emailSender, SignInManager<AppUser> signInManager, UserManager<AppUser> userManager, GateHubContext context, IGenerateTokenService generateTokenService, IVehicleOwnerRepo vehicleOwnerRepo, PaymobService paymobService, IHubContext<NotificationHub> hubContext,FirebaseNotificationService firebaseNotificationService,ITokenBlacklistService blacklistService)
         {
             this.signInManager = signInManager;
             this.userManager = userManager;
@@ -40,6 +42,7 @@ namespace GateHub.Controllers
             this.paymobService = paymobService;
             this.hubContext = hubContext;
             this.firebaseNotificationService = firebaseNotificationService;
+            this.blacklistService = blacklistService;
             this._emailSender = emailSender;
         }
 
@@ -119,7 +122,7 @@ namespace GateHub.Controllers
                 return Unauthorized("User is not registered as a vehicle owner.");
 
 
-            var tokenString = generateTokenService.GenerateJwtTokenAsync(user);
+            var tokenString = await generateTokenService.GenerateJwtTokenAsync(user);
             if (!string.IsNullOrEmpty(dto.DeviceToken))
             {
                 user.DeviceToken = dto.DeviceToken;
@@ -133,8 +136,14 @@ namespace GateHub.Controllers
         [HttpPost("logout")]
         public async Task<IActionResult> Logout()
         {
-            await signInManager.SignOutAsync();
-            return Ok("logout successful");
+            var rawToken = HttpContext.Request.Headers["Authorization"]
+                .ToString()
+                .Replace("Bearer ", "");
+            var handler = new JwtSecurityTokenHandler();
+            var jwtToken = handler.ReadJwtToken(rawToken);
+
+            await blacklistService.BlacklistToken(rawToken, jwtToken.ValidTo);
+            return Ok("Logged out successfully");
         }
 
         [HttpGet("VOProfile")]

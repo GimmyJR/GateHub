@@ -1,11 +1,13 @@
 ﻿using GateHub.Dtos;
 using GateHub.Models;
 using GateHub.repository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace GateHub.Controllers
 {
@@ -19,8 +21,9 @@ namespace GateHub.Controllers
         private readonly IGateStaffRepo gateStaffRepo;
         private readonly IGenerateTokenService generateTokenService;
         private readonly GateHubContext context;
+        private readonly ITokenBlacklistService blacklistService;
 
-        public GateStaffController(SignInManager<AppUser> signInManager,UserManager<AppUser> userManager,IConfiguration configuration,IGateStaffRepo gateStaffRepo,IGenerateTokenService generateTokenService,GateHubContext context)
+        public GateStaffController(SignInManager<AppUser> signInManager,UserManager<AppUser> userManager,IConfiguration configuration,IGateStaffRepo gateStaffRepo,IGenerateTokenService generateTokenService,GateHubContext context,ITokenBlacklistService blacklistService)
         {
             this.signInManager = signInManager;
             this.userManager = userManager;
@@ -28,6 +31,7 @@ namespace GateHub.Controllers
             this.gateStaffRepo = gateStaffRepo;
             this.generateTokenService = generateTokenService;
             this.context = context;
+            this.blacklistService = blacklistService;
         }
 
         [HttpPost("register-gatestaff")]
@@ -123,10 +127,16 @@ namespace GateHub.Controllers
         [HttpPost("logout")]
         public async Task<IActionResult> Logout()
         {
-            await signInManager.SignOutAsync();
-            return Ok("logout successful");
+            var rawToken = HttpContext.Request.Headers["Authorization"]
+                .ToString()
+                .Replace("Bearer ", "");
+            var handler = new JwtSecurityTokenHandler();
+            var jwtToken = handler.ReadJwtToken(rawToken);
+
+            await blacklistService.BlacklistToken(rawToken, jwtToken.ValidTo);
+            return Ok("Logged out successfully");
         }
- 
+
         [HttpPost("AddFine")]
         public async Task<IActionResult> AddFine([FromBody] FineCreationDto dto)
         {
