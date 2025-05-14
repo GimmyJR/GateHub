@@ -46,6 +46,8 @@ namespace GateHub.repository
 
         public async Task<VehicleValidationResult> ValidateVehicle(VehicleValidationDto dto)
         {
+            const double SPEED_LIMIT = 120;
+
             var vehicle = await _context.Vehicles
                 .FirstOrDefaultAsync(v => v.PlateNumber == dto.PlateNumber && v.RFID == dto.RFID);
 
@@ -55,6 +57,7 @@ namespace GateHub.repository
                 {
                     IsMatched = false,
                     IsLost = false,
+                    IsSpeeding = false,
                     IsLicenseExpired = false
                 });
             }
@@ -67,9 +70,11 @@ namespace GateHub.repository
                 {
                     IsMatched = false,
                     IsLost = false,
+                    IsSpeeding = false,
                     IsLicenseExpired = false
                 });
             }
+
 
             var fineEntry = new VehicleEntry
             {
@@ -83,16 +88,76 @@ namespace GateHub.repository
             };
             await AddFine(fineEntry);
 
+            
+            double? speed = await CalculateVehicleSpeed(vehicle.Id, dto.GateId);
+            bool isSpeeding = speed.HasValue && speed > SPEED_LIMIT;
 
             bool isLost = await VechicleIsLost(vehicle);
+
             bool isExpired = await VechicleLicenseIsExpired(vehicle);
 
             return (new VehicleValidationResult
             {
                 IsMatched = true,
                 IsLost = isLost,
+                IsSpeeding = isSpeeding,
                 IsLicenseExpired = isExpired
             });
+        }
+
+        private async Task<double?> CalculateVehicleSpeed(int vehicleId, int currentGateId)
+        {
+            var currentTime = DateTime.Now;
+
+            var previousEntry = await _context.VehicleEntries
+                .Where(ve => ve.VehicleId == vehicleId && ve.GateId != currentGateId)
+                .OrderByDescending(ve => ve.Date)
+                .FirstOrDefaultAsync();
+
+            if (previousEntry == null)
+            {
+                return null; 
+            }
+
+            
+            var previousGate = await _context.Gates.FindAsync(previousEntry.GateId);
+            var currentGate = await _context.Gates.FindAsync(currentGateId);
+
+            if (previousGate == null || currentGate == null || previousGate == currentGate)
+            {
+                return null; 
+            }
+            
+            double distance = CalculateDistance(
+                (double)previousGate.Latitude, (double)previousGate.Longitude,
+                (double)currentGate.Latitude, (double)currentGate.Longitude);
+
+
+            TimeSpan timeDiff = currentTime - previousEntry.Date;
+            double hours = timeDiff.TotalHours;
+
+            if (hours <= 0) return null; 
+
+            return distance / hours;
+        }
+
+        private double CalculateDistance(double lat1, double lon1, double lat2, double lon2)
+        {
+            const double R = 6371; 
+            var dLat = ToRadians(lat2 - lat1);
+            var dLon = ToRadians(lon2 - lon1);
+            lat1 = ToRadians(lat1);
+            lat2 = ToRadians(lat2);
+
+            var a = Math.Sin(dLat / 2) * Math.Sin(dLat / 2) +
+                    Math.Sin(dLon / 2) * Math.Sin(dLon / 2) * Math.Cos(lat1) * Math.Cos(lat2);
+            var c = 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a));
+            return R * c;
+        }
+
+        private double ToRadians(double angle)
+        {
+            return Math.PI * angle / 180.0;
         }
 
 

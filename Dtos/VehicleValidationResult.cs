@@ -5,6 +5,8 @@
         public bool IsMatched { get; set; }
         public bool IsLost { get; set; }
         public bool IsLicenseExpired { get; set; }
+        public bool IsSpeeding { get; set; } 
+
     }
 
 }

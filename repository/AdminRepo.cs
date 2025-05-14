@@ -28,6 +28,8 @@ namespace GateHub.repository
                 AddressName = dto.AddressName,
                 AddressCity = dto.AddressCity,
                 AddressGovernment = dto.AddressGovernment,
+                Latitude = dto.Latitude,
+                Longitude = dto.Longitude,
                 GateStaffs = new List<GateStaff>(),
                 VehicleEntries = new List<VehicleEntry>()
             };
