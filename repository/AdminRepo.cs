@@ -49,6 +49,7 @@ namespace GateHub.repository
         }
         public async Task AddVehicle(VehicleCreateDto dto)
         {
+            var owner = await context.VehicleOwners.FirstOrDefaultAsync(vo => vo.appUser.NatId == dto.NatId);
             var vehicle = new Vehicle
             {
                 PlateNumber = dto.PlateNumber,
@@ -59,7 +60,7 @@ namespace GateHub.repository
                 Color = dto.Color,
                 Type = dto.Type,
                 RFID = dto.RFID,
-                VehicleOwnerId = dto.VehicleOwnerId,
+                VehicleOwnerId = owner.Id,
             };
 
 

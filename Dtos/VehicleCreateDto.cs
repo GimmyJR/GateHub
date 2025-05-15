@@ -24,6 +24,6 @@ namespace GateHub.Dtos
         public string RFID { get; set; }
 
         [Required]
-        public int VehicleOwnerId { get; set; }
+        public string NatId { get; set; }
     }
 }
