@@ -175,6 +175,31 @@ namespace GateHub.Controllers
             return Ok(owner);
         }
 
+        [HttpGet("GetAllVehicles")]
+        public async Task<IActionResult> GetAllVehicles()
+        {
+            var token = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+
+            var handler = new JwtSecurityTokenHandler();
+            var jwtToken = handler.ReadToken(token) as JwtSecurityToken;
+
+            if (jwtToken == null)
+                return Unauthorized();
+
+            var userId = jwtToken.Claims.First(claim => claim.Type == ClaimTypes.NameIdentifier).Value;
+
+
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Unauthorized("User ID not found in token.");
+            }
+
+            var vehicle = await vehicleOwnerRepo.GetAllVehicles(userId);
+            if (vehicle == null)
+                return NotFound();
+            return Ok(vehicle);
+        }
+
         [HttpGet("VOEntries")]
         public async Task<IActionResult> GetMyVehicleEntries()
         {

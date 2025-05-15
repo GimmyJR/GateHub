@@ -86,10 +86,11 @@ namespace GateHub.repository
                 VehicleId = vehicle.Id,
                 GateId = dto.GateId
             };
-            await AddFine(fineEntry);
+            _context.VehicleEntries.Add(fineEntry);
+            await _context.SaveChangesAsync();
 
-            
-            double? speed = await CalculateVehicleSpeed(vehicle.Id, dto.GateId);
+
+            double? speed = await CalculateVehicleSpeed(vehicle.Id);
             bool isSpeeding = speed.HasValue && speed > SPEED_LIMIT;
 
             bool isLost = await VechicleIsLost(vehicle);
@@ -105,39 +106,48 @@ namespace GateHub.repository
             });
         }
 
-        private async Task<double?> CalculateVehicleSpeed(int vehicleId, int currentGateId)
+        private async Task<double?> CalculateVehicleSpeed(int vehicleId)
         {
-            var currentTime = DateTime.Now;
-
-            var previousEntry = await _context.VehicleEntries
-                .Where(ve => ve.VehicleId == vehicleId && ve.GateId != currentGateId)
+            // Get the last two entries for this vehicle
+            var lastTwoEntries = await _context.VehicleEntries
+                .Where(ve => ve.VehicleId == vehicleId)
                 .OrderByDescending(ve => ve.Date)
-                .FirstOrDefaultAsync();
+                .Take(2)
+                .ToListAsync();
 
-            if (previousEntry == null)
+            // Need exactly two entries to calculate speed
+            if (lastTwoEntries.Count != 2)
             {
-                return null; 
+                return null;
             }
 
-            
-            var previousGate = await _context.Gates.FindAsync(previousEntry.GateId);
-            var currentGate = await _context.Gates.FindAsync(currentGateId);
+            var newerEntry = lastTwoEntries[0];
+            var olderEntry = lastTwoEntries[1];
 
-            if (previousGate == null || currentGate == null || previousGate == currentGate)
+            // Get gate locations
+            var newerGate = await _context.Gates.FindAsync(newerEntry.GateId);
+            var olderGate = await _context.Gates.FindAsync(olderEntry.GateId);
+
+            if (newerGate == null || olderGate == null)
             {
-                return null; 
+                return null;
             }
-            
+
+            // Calculate distance between gates (in km)
             double distance = CalculateDistance(
-                (double)previousGate.Latitude, (double)previousGate.Longitude,
-                (double)currentGate.Latitude, (double)currentGate.Longitude);
+                (double)olderGate.Latitude, (double)olderGate.Longitude,
+                (double)newerGate.Latitude, (double)newerGate.Longitude);
 
-
-            TimeSpan timeDiff = currentTime - previousEntry.Date;
+            // Calculate time difference in hours
+            TimeSpan timeDiff = newerEntry.Date - olderEntry.Date;
             double hours = timeDiff.TotalHours;
 
-            if (hours <= 0) return null; 
+            if (hours <= 0)
+            {
+                return null; // Prevent division by zero or negative time
+            }
 
+            // Return speed in km/h
             return distance / hours;
         }
 

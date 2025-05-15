@@ -145,5 +145,17 @@ namespace GateHub.repository
         {
             await context.SaveChangesAsync();
         }
+
+        public async Task<List<Vehicle>> GetAllVehicles(string id)
+        {
+            var owner = context.VehicleOwners.FirstOrDefault(o => o.AppUserId == id);
+
+            var vehicle = await context.Vehicles
+                .Where(v => v.VehicleOwnerId == owner.Id)
+                .Include(v => v.VehicleEntries)
+                .ToListAsync();
+
+            return vehicle;
+        }
     }
 }
