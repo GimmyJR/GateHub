@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 namespace GateHub.Controllers
 {
@@ -457,5 +458,42 @@ namespace GateHub.Controllers
             return BadRequest("vehicle Not Found"); 
         }
 
+        [HttpGet("Profile")]
+        public async Task<IActionResult> AdminProfile()
+        {
+            var token = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+
+            if (string.IsNullOrEmpty(token))
+                return Unauthorized("Token is missing.");
+
+            var handler = new JwtSecurityTokenHandler();
+            var jwtToken = handler.ReadToken(token) as JwtSecurityToken;
+
+            var userId = jwtToken?.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.NameIdentifier)?.Value;
+
+
+            var user = await userManager.FindByIdAsync(userId);
+
+            if (user == null)
+                return NotFound("User not found.");
+
+            var roles = await userManager.GetRolesAsync(user);
+            if (!roles.Contains("Admin"))
+                return Forbid("Access denied. Admins only.");
+
+            return Ok(new
+            {
+                user.Name,
+                user.Id,
+                user.UserName,
+                user.Email,
+                user.NatId
+            });
+        }
+
+
     }
+
+
+    
 }
