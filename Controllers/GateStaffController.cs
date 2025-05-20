@@ -34,6 +34,7 @@ namespace GateHub.Controllers
             this.blacklistService = blacklistService;
         }
 
+        [Authorize(Roles ="Admin")]
         [HttpPost("register-gatestaff")]
         public async Task<IActionResult> RegisterGateStaff([FromBody] GateStaffRegistrationDto dto)
         {
@@ -123,7 +124,7 @@ namespace GateHub.Controllers
 
         }
 
-
+        [Authorize(Roles ="GateStaff")]
         [HttpPost("logout")]
         public async Task<IActionResult> Logout()
         {
@@ -137,6 +138,7 @@ namespace GateHub.Controllers
             return Ok("Logged out successfully");
         }
 
+        [Authorize(Roles ="GateStaff")]
         [HttpPost("AddFine")]
         public async Task<IActionResult> AddFine([FromBody] FineCreationDto dto)
         {
@@ -169,7 +171,6 @@ namespace GateHub.Controllers
 
             return Ok(new { message = $"Fine {fineEntry} added and notification sent successfully." });
         }
-
 
     }
 }

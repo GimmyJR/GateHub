@@ -12,7 +12,7 @@ using System.Security.Claims;
 
 namespace GateHub.Controllers
 {
-    //[Authorize(Roles = "Admin")]
+    
     [Route("api/[controller]")]
     [ApiController]
     public class AdminController : ControllerBase
@@ -35,7 +35,7 @@ namespace GateHub.Controllers
             this.context = context;
             this.blacklistService = blacklistService;
         }
-
+        [Authorize(Roles ="Admin")]
         [HttpPost("register-admin")]
         public async Task<IActionResult> RegisterAdmin([FromBody] AdminRegistrationDto dto)
         {
@@ -118,7 +118,7 @@ namespace GateHub.Controllers
 
         }
 
-
+        [Authorize(Roles ="Admin")]
         [HttpPost("logout")]
         public async Task<IActionResult> Logout()
         {
@@ -132,7 +132,7 @@ namespace GateHub.Controllers
             return Ok("Logged out successfully");
         }
 
-        
+        [Authorize(Roles ="Admin")]
         [HttpPost("add-gate")]
         public async Task<IActionResult> AddGate([FromBody] GateCreateDto dto)
         {
@@ -146,7 +146,7 @@ namespace GateHub.Controllers
             return Ok(dto);
         }
 
-        
+        [Authorize(Roles ="Admin")]
         [HttpGet("GetGateById/{id}")]
         public async Task<IActionResult> GetGateById(int id)
         {
@@ -158,7 +158,7 @@ namespace GateHub.Controllers
             return Ok(gate);
         }
 
-
+        [Authorize(Roles ="Admin")]
         [HttpPost("Add-vehicle")]
         public async Task<IActionResult> AddVehicle(VehicleCreateDto dto)
         {
@@ -171,8 +171,8 @@ namespace GateHub.Controllers
 
             return Ok(dto);
         }
-        
-        
+
+        [Authorize(Roles ="Admin")]
         [HttpGet("GetVehicleById/{id}")]
         public async Task<IActionResult> GetVehicleById(int id)
         {
@@ -182,7 +182,7 @@ namespace GateHub.Controllers
             return Ok(vehicle);
         }
 
-        
+        [Authorize(Roles ="Admin")]
         [HttpPost("AddLostVehicle")]
         public async Task<IActionResult> AddLostVehicle([FromBody] LostVehicleCreationDto dto)
         {
@@ -200,7 +200,7 @@ namespace GateHub.Controllers
             return Ok(dto);
         }
 
-        
+        [Authorize(Roles ="Admin")]
         [HttpGet("getallLostVehicles")]
         public async Task<IActionResult> GetAllLostVehicles()
         {
@@ -209,7 +209,7 @@ namespace GateHub.Controllers
             return Ok(lostVehicles);
         }
 
-        
+        [Authorize(Roles ="Admin")]
         [HttpPost("RecoverVehicle")]
         public async Task<IActionResult> RecoverVehicle (RecoverVehicleDTO dto)
         {
@@ -256,7 +256,7 @@ namespace GateHub.Controllers
 
 
         // dashboard actions
-
+        [Authorize(Roles ="Admin")]
         [HttpGet("VehicleCount")]
         public async Task<IActionResult> TotalVehicleEnteredToDay ()
         {
@@ -270,6 +270,7 @@ namespace GateHub.Controllers
 
         }
 
+        [Authorize(Roles ="Admin")]
         [HttpGet ("TotalRevenue")]
         public async Task<IActionResult> TotalRevenueMonthly ()
         {
@@ -285,6 +286,8 @@ namespace GateHub.Controllers
 
         }
 
+
+        [Authorize(Roles ="Admin")]
         [HttpGet("LostVehicleCount")]
         public async Task<IActionResult> GetLostVehicleCount ()
         {
@@ -292,6 +295,7 @@ namespace GateHub.Controllers
             return Ok(count);
         }
 
+        [Authorize(Roles ="Admin")]
         [HttpGet("DailyReport")]
         public async Task<IActionResult> GetDailyReport()
         {
@@ -301,7 +305,7 @@ namespace GateHub.Controllers
             return Ok(hourlyData);
         }
 
-
+        [Authorize(Roles ="Admin")]
         [HttpGet("RecentCars")]
         public async Task<IActionResult> GetRecentCars()
         {
@@ -309,7 +313,8 @@ namespace GateHub.Controllers
 
             return Ok(recent);
         }
-
+        
+        [Authorize(Roles ="Admin")]
         [HttpGet("TopGatesToday")]
         public async Task<IActionResult> GetTopGatesToday()
         {
@@ -318,6 +323,7 @@ namespace GateHub.Controllers
             return Ok(topGates);
         }
 
+        [Authorize(Roles ="Admin")]
         [HttpGet("GetRecentLostVehicleAlerts")]
         public async Task<IActionResult> GetRecentLostVehicleAlerts()
         {
@@ -332,6 +338,7 @@ namespace GateHub.Controllers
             return Ok(formattedAlerts);
         }
 
+        [Authorize(Roles ="Admin")]
         [HttpGet("GetVehicleByPlateNumberWithOwner")]
         public async Task<IActionResult> GetVehicleByPlateNumberWithOwner(string plateNum)
         {
@@ -342,6 +349,7 @@ namespace GateHub.Controllers
             return Ok(vehicle);
         }
 
+        [Authorize(Roles ="Admin")]
         [HttpGet("GetOwnerWithVehicles")]
         public async Task<IActionResult> GetOwnerWithVehicles(string natId)
         {
@@ -352,6 +360,7 @@ namespace GateHub.Controllers
             return Ok(result);
         }
 
+        [Authorize(Roles ="Admin")]
         [HttpGet("GetLostVehicleByPlate")]
         public async Task<IActionResult> GetLostVehicleByPlate(string plateNumber)
         {
@@ -384,6 +393,7 @@ namespace GateHub.Controllers
             });
         }
 
+        [Authorize(Roles ="Admin")]
         [HttpPost("AcceptObjection/{id}")]
         public async Task<IActionResult> AcceptObjection(int id)
         {
@@ -394,7 +404,7 @@ namespace GateHub.Controllers
             return Ok(new { message = "Objection accepted successfully" });
         }
 
-
+        [Authorize(Roles ="Admin")]
         [HttpPost("RejectObjection/{id}")]
         public async Task<IActionResult> RejectObjection(int id)
         {
@@ -405,6 +415,7 @@ namespace GateHub.Controllers
             return Ok(new { message = "Objection rejected and value increased by 10%" });
         }
 
+        [Authorize(Roles ="Admin")]
         [HttpPatch("update-vehicle-owner")]
         public async Task<IActionResult> UpdateVehicleOwner(int OwnerId,[FromBody] VehicleOwnerUpdateDto dto)
         {
@@ -418,6 +429,7 @@ namespace GateHub.Controllers
             return Ok(new { message = "Vehicle owner updated successfully.", owner });
         }
 
+        [Authorize(Roles ="Admin")]
         [HttpGet("Objections")]
         public async Task<IActionResult> GetAllObjections ()
         {
@@ -429,7 +441,7 @@ namespace GateHub.Controllers
 
         }
 
-        
+        [Authorize(Roles ="Admin")]
         [HttpGet("ObjectionDetails")]
         public async Task<IActionResult> GetObjectionDetails(int  objectionId)
         {
@@ -442,7 +454,7 @@ namespace GateHub.Controllers
 
         }
 
-
+        [Authorize(Roles ="Admin")]
         [HttpPatch("EditVehicle")]
         public async Task<IActionResult> EditVehicle(int vehicleId , [FromBody] UpdateVehicleDto dto)
         {
@@ -458,6 +470,7 @@ namespace GateHub.Controllers
             return BadRequest("vehicle Not Found"); 
         }
 
+        [Authorize(Roles ="Admin")]
         [HttpGet("Profile")]
         public async Task<IActionResult> AdminProfile()
         {
@@ -490,7 +503,6 @@ namespace GateHub.Controllers
                 user.NatId
             });
         }
-
 
     }
 

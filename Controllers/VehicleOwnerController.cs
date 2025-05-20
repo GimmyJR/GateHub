@@ -46,7 +46,7 @@ namespace GateHub.Controllers
             this._emailSender = emailSender;
         }
 
-
+        [Authorize(Roles ="Admin")]
         [HttpPost("register-vehicle-owner")]
         public async Task<IActionResult> RegisterVehicleOwner([FromBody] VehicleOwnerRegistrationDto dto)
         {
@@ -133,6 +133,7 @@ namespace GateHub.Controllers
 
         }
 
+        [Authorize(Roles ="VehicleOwner")]
         [HttpPost("logout")]
         public async Task<IActionResult> Logout()
         {
@@ -147,6 +148,7 @@ namespace GateHub.Controllers
         }
 
         [HttpGet("VOProfile")]
+        [Authorize(Roles =  "VehicleOwner")]
         public async Task<IActionResult> GetVehicleOwnerProfile()
         {
             var token = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
@@ -175,6 +177,7 @@ namespace GateHub.Controllers
             return Ok(owner);
         }
 
+        [Authorize(Roles ="VehicleOwner")]
         [HttpGet("GetAllVehicles")]
         public async Task<IActionResult> GetAllVehicles()
         {
@@ -200,6 +203,7 @@ namespace GateHub.Controllers
             return Ok(vehicle);
         }
 
+        [Authorize(Roles ="VehicleOwner")]
         [HttpGet("VOEntries")]
         public async Task<IActionResult> GetMyVehicleEntries()
         {
@@ -228,6 +232,7 @@ namespace GateHub.Controllers
             return Ok(vehicleEntries);
         }
 
+        [Authorize(Roles ="VehicleOwner")]
         [HttpPost("SubmitObjection")]
         public async Task<IActionResult> SubmitObjection([FromBody] ObjectionDto dto)
         {
@@ -292,6 +297,7 @@ namespace GateHub.Controllers
             return Ok(new { message = "Objection submitted successfully.", objection });
         }
 
+        [Authorize(Roles ="VehicleOwner")]
         [HttpPost("pay-vehicle-entry/{vehicleEntryId}")]
         public async Task<IActionResult> PayVehicleEntry(int vehicleEntryId)
         {
@@ -330,6 +336,7 @@ namespace GateHub.Controllers
 
         }
 
+        [Authorize(Roles ="VehicleOwner")]
         [HttpPost("pay-multiple-vehicle-entries")]
         public async Task<IActionResult> PayMultipleVehicleEntries([FromBody] List<int> vehicleEntryIds)
         {
@@ -376,6 +383,7 @@ namespace GateHub.Controllers
             return Ok(new { message = "Redirect to this URL for payment", paymentUrl });
         }
 
+        [Authorize(Roles ="VehicleOwner")]
         [HttpPost("recharge-balance")]
         public async Task<IActionResult> RechargeBalance([FromBody] BalanceRechargeDto dto)
         {
@@ -404,6 +412,7 @@ namespace GateHub.Controllers
             return Ok(new { message = "Redirect to this URL for payment", paymentUrl });
         }
 
+        [Authorize(Roles ="VehicleOwner")]
         [HttpPost("pay-from-balance")]
         public async Task<IActionResult> PayFromBalance([FromBody] List<int> vehicleEntryIds)
         {
@@ -589,6 +598,7 @@ namespace GateHub.Controllers
             }
         }
 
+        [Authorize(Roles ="VehicleOwner")]
         [HttpPost("ChangePassword")]
         public async Task<IActionResult> changePassword([FromBody] ChangePasswordDto dto)
         {
@@ -622,6 +632,7 @@ namespace GateHub.Controllers
 
         }
 
+        [Authorize(Roles ="VehicleOwner")]
         [HttpGet("VehicleEntries")]
         public async Task<IActionResult> VehicleEntries(int vehicleId)
         {
@@ -710,8 +721,8 @@ namespace GateHub.Controllers
             return Ok("Password has been reset successfully.");
 
         }
-       
-        
+
+        [Authorize(Roles ="VehicleOwner")]
         [HttpGet("GetNotifications")]
         public async Task<IActionResult> GetNotifications()
         {
@@ -735,6 +746,7 @@ namespace GateHub.Controllers
             return Ok(notifications);
         }
 
+        [Authorize(Roles ="VehicleOwner")]
         [HttpGet("vehicle-entry/{id}")]
         public async Task<IActionResult> GetVehicleEntryById(int id)
         {
@@ -747,7 +759,6 @@ namespace GateHub.Controllers
 
             return Ok(vehicleEntry);
         }
-
 
     }
 }

@@ -38,9 +38,9 @@ namespace GateHub.repository
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:Secret"]));
 
             var token = new JwtSecurityToken(
-                issuer: configuration["JWT:VallidIssuer"],
-                audience: configuration["JWT:VallidAudience"],
-                expires: DateTime.Now.AddHours(3),
+                issuer: configuration["JWT:ValidIssuer"],
+                audience: configuration["JWT:ValidAudience"],
+                expires: DateTime.UtcNow.AddHours(3),
                 claims: authClaims,
                 signingCredentials: new SigningCredentials(key, SecurityAlgorithms.HmacSha256)
                 );

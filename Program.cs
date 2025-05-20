@@ -10,6 +10,8 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 using System.Text.Json.Serialization;
 
 namespace GateHub
@@ -49,7 +51,7 @@ namespace GateHub
                         .AllowAnyMethod();
                     });
             });
-
+            
             builder.Services.AddScoped<IAdminRepo, AdminRepo>();
             builder.Services.AddScoped<IVehicleOwnerRepo, VehicleOwnerRepo>();
             builder.Services.AddScoped<IGateStaffRepo, GateStaffRepo>();
@@ -58,7 +60,7 @@ namespace GateHub
             builder.Services.AddScoped<ISystemFeatures, SystemFeatures>() ;
             builder.Services.AddScoped<ITokenBlacklistService, TokenBlacklistService>();
             builder.Services.AddScoped<FirebaseNotificationService>();
-
+            
             builder.Services.AddDbContext<GateHubContext>(options =>
             options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
             
@@ -70,8 +72,6 @@ namespace GateHub
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             }).AddJwtBearer(options =>
             {
-                options.RequireHttpsMetadata = false;
-                options.SaveToken = true;
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuer = true,
@@ -80,7 +80,11 @@ namespace GateHub
                     ValidateIssuerSigningKey = true,
                     ValidIssuer = builder.Configuration["JWT:ValidIssuer"],
                     ValidAudience = builder.Configuration["JWT:ValidAudience"],
-                    ClockSkew = TimeSpan.Zero
+                    IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(builder.Configuration["JWT:Secret"])),
+                    ClockSkew = TimeSpan.Zero,
+                    NameClaimType = ClaimTypes.NameIdentifier,
+                    RoleClaimType = ClaimTypes.Role,
                 };
                 options.Events = new JwtBearerEvents
                 {
@@ -123,8 +127,8 @@ namespace GateHub
             app.UseHttpsRedirection();
             app.UseRouting();
             app.UseCors("AllowAll");
-            app.UseAuthentication();
             app.UseWebSockets();
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapHub<NotificationHub>("/notificationHub");
