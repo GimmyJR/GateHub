@@ -91,6 +91,8 @@ namespace GateHub.Controllers
                 await userManager.UpdateAsync(user);
             }
 
+
+            
             return Ok(vehicleOwner);
         }
 
@@ -282,17 +284,15 @@ namespace GateHub.Controllers
             var user = await userManager.FindByIdAsync(userId);
             var deviceToken = user?.DeviceToken;
 
-            await firebaseNotificationService.StoreNotification(userId, "Objection Submitted",
-                "Your objection has been submitted and is under review");
+            await firebaseNotificationService.StoreNotification(userId, "تم تقديم الاعتراض",
+                "تم استلام اعتراضك وهو قيد المراجعة الآن");
 
-            //if (!string.IsNullOrEmpty(deviceToken))
-            //{
             await firebaseNotificationService.SendNotificationAsync(
-                "Objection Submitted",
-                "Your objection has been submitted and is under review",
+                "تم تقديم الاعتراض",
+                "تم استلام اعتراضك وهو قيد المراجعة الآن",
                 deviceToken
             );
-            //}
+
 
             return Ok(new { message = "Objection submitted successfully.", objection });
         }
@@ -380,6 +380,7 @@ namespace GateHub.Controllers
             // Initiate payment for multiple entries
             string paymentUrl = await paymobService.InitiatePayment(owner, totalAmount, vehicleEntryIdsString, "Multiple Vehicle Entries Payment");
 
+            
             return Ok(new { message = "Redirect to this URL for payment", paymentUrl });
         }
 
@@ -533,14 +534,25 @@ namespace GateHub.Controllers
 
                     await vehicleOwnerRepo.AddTransaction(rechargeTransaction);
 
-                    // Send real-time notification
-                    await hubContext.Clients.User(owner.AppUserId)
-                        .SendAsync("ReceiveNotification", new
-                        {
-                            Title = "Balance Recharged",
-                            Message = $"Your balance has been successfully recharged with {amountPaid} EGP.",
-                            Date = DateTime.UtcNow
-                        });
+                    // Get user for notification
+                    var user1 = await userManager.FindByIdAsync(owner.AppUserId);
+
+                    // Send and store notification
+                    await firebaseNotificationService.StoreNotification(
+                        user1.Id,
+                        "تم شحن الرصيد بنجاح",
+                        $"تم إضافة مبلغ {amountPaid} جنيه إلى رصيدك. الرصيد الحالي: {owner.Balance} جنيه"
+                    );
+
+                    if (!string.IsNullOrEmpty(user1.DeviceToken))
+                    {
+                        await firebaseNotificationService.SendNotificationAsync(
+                            "تم شحن الرصيد بنجاح",
+                            $"تم إضافة مبلغ {amountPaid} جنيه إلى رصيدك. الرصيد الحالي: {owner.Balance} جنيه",
+                            user1.DeviceToken
+                        );
+                    }
+
 
                     return Ok();
                 }
@@ -581,14 +593,26 @@ namespace GateHub.Controllers
                 await vehicleOwnerRepo.AddTransaction(transaction);
 
 
-                // **Send real-time notification via SignalR**
-                await hubContext.Clients.User(appUserId)
-                    .SendAsync("ReceiveNotification", new
-                    {
-                        Title = "Payment Successful",
-                        Message = $"Your payment of {amountPaid} EGP has been received.",
-                        Date = DateTime.UtcNow
-                    });
+                // Get user for notification
+                var user = await userManager.FindByIdAsync(appUserId);
+
+                // Send and store notification
+                await firebaseNotificationService.StoreNotification(
+                    user.Id,
+                    "تمت عملية الدفع بنجاح",
+                    $"تم دفع مبلغ {amountPaid} جنيه عن المخالفات المرورية. رقم المرجع: {data.Obj.Id}"
+                );
+
+                if (!string.IsNullOrEmpty(user.DeviceToken))
+                {
+                    await firebaseNotificationService.SendNotificationAsync(
+                        "تمت عملية الدفع بنجاح",
+                        $"تم دفع مبلغ {amountPaid} جنيه عن المخالفات المرورية. رقم المرجع: {data.Obj.Id}",
+                        user.DeviceToken
+                    );
+                }
+
+
 
                 return Ok();
             }

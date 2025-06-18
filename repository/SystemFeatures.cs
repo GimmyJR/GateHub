@@ -115,7 +115,6 @@ namespace GateHub.repository
                 .Take(2)
                 .ToListAsync();
 
-            // Need exactly two entries to calculate speed
             if (lastTwoEntries.Count != 2)
             {
                 return null;
@@ -124,7 +123,6 @@ namespace GateHub.repository
             var newerEntry = lastTwoEntries[0];
             var olderEntry = lastTwoEntries[1];
 
-            // Get gate locations
             var newerGate = await _context.Gates.FindAsync(newerEntry.GateId);
             var olderGate = await _context.Gates.FindAsync(olderEntry.GateId);
 
@@ -133,7 +131,6 @@ namespace GateHub.repository
                 return null;
             }
 
-            // Calculate distance between gates (in km)
             double distance = CalculateDistance(
                 (double)olderGate.Latitude, (double)olderGate.Longitude,
                 (double)newerGate.Latitude, (double)newerGate.Longitude);
@@ -144,10 +141,9 @@ namespace GateHub.repository
 
             if (hours <= 0)
             {
-                return null; // Prevent division by zero or negative time
+                return null; 
             }
 
-            // Return speed in km/h
             return distance / hours;
         }
 

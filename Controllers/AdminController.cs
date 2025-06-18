@@ -24,8 +24,9 @@ namespace GateHub.Controllers
         private readonly IGenerateTokenService generateTokenService;
         private readonly GateHubContext context;
         private readonly ITokenBlacklistService blacklistService;
+        private readonly FirebaseNotificationService firebaseNotificationService;
 
-        public AdminController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, IConfiguration configuration, IAdminRepo adminRepo, IGenerateTokenService generateTokenService, GateHubContext context,ITokenBlacklistService blacklistService)
+        public AdminController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, IConfiguration configuration, IAdminRepo adminRepo, IGenerateTokenService generateTokenService, GateHubContext context,ITokenBlacklistService blacklistService,FirebaseNotificationService firebaseNotificationService)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
@@ -34,6 +35,7 @@ namespace GateHub.Controllers
             this.generateTokenService = generateTokenService;
             this.context = context;
             this.blacklistService = blacklistService;
+            this.firebaseNotificationService = firebaseNotificationService;
         }
         [Authorize(Roles ="Admin")]
         [HttpPost("register-admin")]
@@ -401,6 +403,31 @@ namespace GateHub.Controllers
             if (objection == null)
                 return NotFound("Objection not found.");
 
+
+            // Get owner and user info
+            var owner = await context.VehicleOwners
+            .Include(vo => vo.appUser) // Include the related AppUser
+            .FirstOrDefaultAsync(vo => vo.Id == objection.VehicleOwnerId);
+            var user = await userManager.FindByIdAsync(owner.AppUserId);
+
+            if (user != null)
+            {
+                await firebaseNotificationService.StoreNotification(
+                    user.Id,
+                    "تم قبول الاعتراض",
+                    $"تم قبول اعتراضك على المخالفة رقم {objection.VehicleEntryId}. سيتم إعادة المبلغ المدفوع"
+                );
+
+                if (!string.IsNullOrEmpty(user.DeviceToken))
+                {
+                    await firebaseNotificationService.SendNotificationAsync(
+                        "تم قبول الاعتراض",
+                        $"تم قبول اعتراضك على المخالفة رقم {objection.VehicleEntryId}. سيتم إعادة المبلغ المدفوع",
+                        user.DeviceToken
+                    );
+                }
+            }
+
             return Ok(new { message = "Objection accepted successfully" });
         }
 
@@ -411,6 +438,30 @@ namespace GateHub.Controllers
             var objection = await adminRepo.RejectObjection(id);
             if (objection == null)
                 return NotFound("Objection not found");
+
+            var owner = await context.VehicleOwners
+            .Include(vo => vo.appUser) // Include the related AppUser
+            .FirstOrDefaultAsync(vo => vo.Id == objection.VehicleOwnerId);
+            var user = await userManager.FindByIdAsync(owner.AppUserId);
+
+            if (user != null)
+            {
+                await firebaseNotificationService.StoreNotification(
+                    user.Id,
+                    "تم رفض الاعتراض",
+                    $"تم رفض اعتراضك على المخالفة رقم {objection.VehicleEntryId}. تم زيادة قيمة المخالفة بنسبة 10%"
+                );
+
+                if (!string.IsNullOrEmpty(user.DeviceToken))
+                {
+                    await firebaseNotificationService.SendNotificationAsync(
+                        "تم رفض الاعتراض",
+                        $"تم رفض اعتراضك على المخالفة رقم {objection.VehicleEntryId}. تم زيادة قيمة المخالفة بنسبة 10%",
+                        user.DeviceToken
+                    );
+                }
+            }
+
 
             return Ok(new { message = "Objection rejected and value increased by 10%" });
         }

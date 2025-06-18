@@ -7,6 +7,7 @@ D:\Backend Material\Projects\dot net projects\GateHub\obj\Release\net8.0\PubTmp\
 D:\Backend Material\Projects\dot net projects\GateHub\obj\Release\net8.0\PubTmp\Out\GateHub.pdb
 D:\Backend Material\Projects\dot net projects\GateHub\obj\Release\net8.0\PubTmp\Out\Azure.Core.dll
 D:\Backend Material\Projects\dot net projects\GateHub\obj\Release\net8.0\PubTmp\Out\Azure.Identity.dll
+D:\Backend Material\Projects\dot net projects\GateHub\obj\Release\net8.0\PubTmp\Out\Castle.Core.dll
 D:\Backend Material\Projects\dot net projects\GateHub\obj\Release\net8.0\PubTmp\Out\FirebaseAdmin.dll
 D:\Backend Material\Projects\dot net projects\GateHub\obj\Release\net8.0\PubTmp\Out\Google.Api.Gax.dll
 D:\Backend Material\Projects\dot net projects\GateHub\obj\Release\net8.0\PubTmp\Out\Google.Api.Gax.Rest.dll
@@ -48,6 +49,8 @@ D:\Backend Material\Projects\dot net projects\GateHub\obj\Release\net8.0\PubTmp\
 D:\Backend Material\Projects\dot net projects\GateHub\obj\Release\net8.0\PubTmp\Out\Microsoft.OpenApi.dll
 D:\Backend Material\Projects\dot net projects\GateHub\obj\Release\net8.0\PubTmp\Out\Microsoft.SqlServer.Server.dll
 D:\Backend Material\Projects\dot net projects\GateHub\obj\Release\net8.0\PubTmp\Out\Microsoft.Win32.SystemEvents.dll
+D:\Backend Material\Projects\dot net projects\GateHub\obj\Release\net8.0\PubTmp\Out\Moq.dll
+D:\Backend Material\Projects\dot net projects\GateHub\obj\Release\net8.0\PubTmp\Out\Microsoft.VisualStudio.TestPlatform.TestFramework.dll
 D:\Backend Material\Projects\dot net projects\GateHub\obj\Release\net8.0\PubTmp\Out\Newtonsoft.Json.dll
 D:\Backend Material\Projects\dot net projects\GateHub\obj\Release\net8.0\PubTmp\Out\Swashbuckle.AspNetCore.Swagger.dll
 D:\Backend Material\Projects\dot net projects\GateHub\obj\Release\net8.0\PubTmp\Out\Swashbuckle.AspNetCore.SwaggerGen.dll
@@ -69,6 +72,21 @@ D:\Backend Material\Projects\dot net projects\GateHub\obj\Release\net8.0\PubTmp\
 D:\Backend Material\Projects\dot net projects\GateHub\obj\Release\net8.0\PubTmp\Out\System.Text.Encodings.Web.dll
 D:\Backend Material\Projects\dot net projects\GateHub\obj\Release\net8.0\PubTmp\Out\System.Text.Json.dll
 D:\Backend Material\Projects\dot net projects\GateHub\obj\Release\net8.0\PubTmp\Out\System.Windows.Extensions.dll
+D:\Backend Material\Projects\dot net projects\GateHub\obj\Release\net8.0\PubTmp\Out\xunit.abstractions.dll
+D:\Backend Material\Projects\dot net projects\GateHub\obj\Release\net8.0\PubTmp\Out\xunit.core.dll
+D:\Backend Material\Projects\dot net projects\GateHub\obj\Release\net8.0\PubTmp\Out\cs\Microsoft.VisualStudio.TestPlatform.TestFramework.resources.dll
+D:\Backend Material\Projects\dot net projects\GateHub\obj\Release\net8.0\PubTmp\Out\de\Microsoft.VisualStudio.TestPlatform.TestFramework.resources.dll
+D:\Backend Material\Projects\dot net projects\GateHub\obj\Release\net8.0\PubTmp\Out\es\Microsoft.VisualStudio.TestPlatform.TestFramework.resources.dll
+D:\Backend Material\Projects\dot net projects\GateHub\obj\Release\net8.0\PubTmp\Out\fr\Microsoft.VisualStudio.TestPlatform.TestFramework.resources.dll
+D:\Backend Material\Projects\dot net projects\GateHub\obj\Release\net8.0\PubTmp\Out\it\Microsoft.VisualStudio.TestPlatform.TestFramework.resources.dll
+D:\Backend Material\Projects\dot net projects\GateHub\obj\Release\net8.0\PubTmp\Out\ja\Microsoft.VisualStudio.TestPlatform.TestFramework.resources.dll
+D:\Backend Material\Projects\dot net projects\GateHub\obj\Release\net8.0\PubTmp\Out\ko\Microsoft.VisualStudio.TestPlatform.TestFramework.resources.dll
+D:\Backend Material\Projects\dot net projects\GateHub\obj\Release\net8.0\PubTmp\Out\pl\Microsoft.VisualStudio.TestPlatform.TestFramework.resources.dll
+D:\Backend Material\Projects\dot net projects\GateHub\obj\Release\net8.0\PubTmp\Out\pt-BR\Microsoft.VisualStudio.TestPlatform.TestFramework.resources.dll
+D:\Backend Material\Projects\dot net projects\GateHub\obj\Release\net8.0\PubTmp\Out\ru\Microsoft.VisualStudio.TestPlatform.TestFramework.resources.dll
+D:\Backend Material\Projects\dot net projects\GateHub\obj\Release\net8.0\PubTmp\Out\tr\Microsoft.VisualStudio.TestPlatform.TestFramework.resources.dll
+D:\Backend Material\Projects\dot net projects\GateHub\obj\Release\net8.0\PubTmp\Out\zh-Hans\Microsoft.VisualStudio.TestPlatform.TestFramework.resources.dll
+D:\Backend Material\Projects\dot net projects\GateHub\obj\Release\net8.0\PubTmp\Out\zh-Hant\Microsoft.VisualStudio.TestPlatform.TestFramework.resources.dll
 D:\Backend Material\Projects\dot net projects\GateHub\obj\Release\net8.0\PubTmp\Out\runtimes\unix\lib\net6.0\Microsoft.Data.SqlClient.dll
 D:\Backend Material\Projects\dot net projects\GateHub\obj\Release\net8.0\PubTmp\Out\runtimes\win\lib\net6.0\Microsoft.Data.SqlClient.dll
 D:\Backend Material\Projects\dot net projects\GateHub\obj\Release\net8.0\PubTmp\Out\runtimes\win-arm\native\Microsoft.Data.SqlClient.SNI.dll
@@ -83,4 +101,6 @@ D:\Backend Material\Projects\dot net projects\GateHub\obj\Release\net8.0\PubTmp\
 D:\Backend Material\Projects\dot net projects\GateHub\obj\Release\net8.0\PubTmp\Out\runtimes\win\lib\net6.0\System.Security.Cryptography.ProtectedData.dll
 D:\Backend Material\Projects\dot net projects\GateHub\obj\Release\net8.0\PubTmp\Out\runtimes\browser\lib\net8.0\System.Text.Encodings.Web.dll
 D:\Backend Material\Projects\dot net projects\GateHub\obj\Release\net8.0\PubTmp\Out\runtimes\win\lib\net6.0\System.Windows.Extensions.dll
+D:\Backend Material\Projects\dot net projects\GateHub\obj\Release\net8.0\PubTmp\Out\Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.dll
+D:\Backend Material\Projects\dot net projects\GateHub\obj\Release\net8.0\PubTmp\Out\Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.xml
 D:\Backend Material\Projects\dot net projects\GateHub\obj\Release\net8.0\PubTmp\Out\GateHub.deps.json

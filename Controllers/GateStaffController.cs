@@ -22,8 +22,9 @@ namespace GateHub.Controllers
         private readonly IGenerateTokenService generateTokenService;
         private readonly GateHubContext context;
         private readonly ITokenBlacklistService blacklistService;
+        private readonly FirebaseNotificationService firebaseNotificationService;
 
-        public GateStaffController(SignInManager<AppUser> signInManager,UserManager<AppUser> userManager,IConfiguration configuration,IGateStaffRepo gateStaffRepo,IGenerateTokenService generateTokenService,GateHubContext context,ITokenBlacklistService blacklistService)
+        public GateStaffController(SignInManager<AppUser> signInManager,UserManager<AppUser> userManager,IConfiguration configuration,IGateStaffRepo gateStaffRepo,IGenerateTokenService generateTokenService,GateHubContext context,ITokenBlacklistService blacklistService,FirebaseNotificationService firebaseNotificationService)
         {
             this.signInManager = signInManager;
             this.userManager = userManager;
@@ -32,6 +33,7 @@ namespace GateHub.Controllers
             this.generateTokenService = generateTokenService;
             this.context = context;
             this.blacklistService = blacklistService;
+            this.firebaseNotificationService = firebaseNotificationService;
         }
 
         [Authorize(Roles ="Admin")]
@@ -168,6 +170,32 @@ namespace GateHub.Controllers
                 GateId = dto.GateId
             };
             await gateStaffRepo.AddFine(fineEntry);
+
+            // Get vehicle owner and user info
+            var owner = await context.VehicleOwners
+            .Include(vo => vo.appUser) // Include the related AppUser
+            .FirstOrDefaultAsync(vo => vo.Id == vehicle.VehicleOwnerId);
+
+            var user = await userManager.FindByIdAsync(owner.AppUserId);
+
+            // Send and store notification
+            if (user != null)
+            {
+                await firebaseNotificationService.StoreNotification(
+                    user.Id,
+                    "تم إضافة مخالفة جديدة",
+                    $"تم تسجيل مخالفة مرورية جديدة على مركبتك بقيمة {dto.FineValue} جنيه. نوع المخالفة: {dto.FineType}"
+                );
+
+                if (!string.IsNullOrEmpty(user.DeviceToken))
+                {
+                    await firebaseNotificationService.SendNotificationAsync(
+                        "تم إضافة مخالفة جديدة",
+                        $"تم تسجيل مخالفة مرورية جديدة على مركبتك بقيمة {dto.FineValue} جنيه. نوع المخالفة: {dto.FineType}",
+                        user.DeviceToken
+                    );
+                }
+            }
 
             return Ok(new { message = $"Fine {fineEntry} added and notification sent successfully." });
         }
